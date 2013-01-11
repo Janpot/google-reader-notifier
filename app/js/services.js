@@ -175,6 +175,7 @@ services.factory('reader', function ($http, $q) {
     
     var self = this;
     var markAllAsReadLocal = function () {
+      chrome.extension.sendMessage({ method: "updateUnreadCount" });
       self.items.forEach(function (item) {
         item.read = true;
       });

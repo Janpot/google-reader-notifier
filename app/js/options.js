@@ -13,7 +13,7 @@
   };
   
   if (localStorage.optionsArea === undefined) {
-    localStorage.optionsArea = areas.sync;
+    localStorage.optionsArea = areas.local;
   }
 
   var isSyncEnabled = function () {

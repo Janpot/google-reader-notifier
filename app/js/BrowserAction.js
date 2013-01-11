@@ -124,13 +124,12 @@ var browserAction = (function () {
   });
   
   
-  var animating = false;
+  var aniamtionIntervalId;
 
   // perform animation
   var animate = function() {
-    if (!animating) {    
-      animating = true;
-      chrome.alarms.create('animation', { periodInMinutes: 0.001 });
+    if (!aniamtionIntervalId) { 
+      aniamtionIntervalId = setInterval(animateFrame, 60);
     }
   };
   
@@ -139,24 +138,17 @@ var browserAction = (function () {
     render(currentFrame);
     if(currentFrame === 0) {
       // animation finished
-      chrome.alarms.clear('animation')
-      animating = false;
+      clearInterval(aniamtionIntervalId);
+      aniamtionIntervalId = null;
     }
   }
   
-  var previewing = false;
+  var previewTimeoutId;
   
   var stopPreview = function () {
     setColor(color);
-    previewing = false;
+    previewTimeoutId = null;
   };
-  
-  chrome.alarms.onAlarm.addListener(function(alarm) {
-    switch (alarm.name) {
-      case 'animation': animateFrame(); break;
-      case 'preview-color-end': stopPreview(); break;
-    }
-  });
   
   doAnimation = false;
   
@@ -165,7 +157,7 @@ var browserAction = (function () {
       count = count || 0;
       if (count !== prevCount) {
         color = count === 0 ? colorNoUnread : colorUnread;
-        if (!previewing) {
+        if (!previewTimeoutId) {
           setColor(color);
         }
         setBadge(count);
@@ -193,9 +185,12 @@ var browserAction = (function () {
     },
     
     previewColor: function (rgb) {
-      previewing = true;
       setColor(rgb);
-      chrome.alarms.create('preview-color-end', { delayInMinutes: 0.03 });
+      if (previewTimeoutId) {
+        clearTimeout(previewTimeoutId);
+        previewTimeoutId = null;
+      }
+      previewTimeoutId = setTimeout(stopPreview, 1500);
     }
   };
 

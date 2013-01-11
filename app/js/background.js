@@ -45,16 +45,17 @@ var refreshUnreadCount = function () {
   });
 };
 
+var updateIntervalId;
+
 var setUpdateInterval = function (interval) {
   console.log('interval is now ' + interval + ' minutes');
-  chrome.alarms.create('refresh', { delayInMinutes : 0, periodInMinutes: interval }); 
-};
-
-chrome.alarms.onAlarm.addListener(function(alarm) {
-  if (alarm.name === 'refresh') {
-    refreshUnreadCount();
+  if (updateIntervalId) {
+    clearInterval(updateIntervalId)
   }
-});
+  var period = interval * 60 *1000; // minutes to ms
+  updateIntervalId = setInterval(refreshUnreadCount, period);
+  refreshUnreadCount();
+};
 
 var parseColor = function (hex) {
   var match = /^#([0-9A-Fa-f])([0-9A-Fa-f])([0-9A-Fa-f])$/.exec(hex);

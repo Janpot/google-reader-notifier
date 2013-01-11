@@ -45,6 +45,14 @@ function OptionsCtrl($scope, options) {
         {   
             value: 60,        
             description: '1 hour'      
+        },
+        {   
+            value: 240,        
+            description: '4 hours'      
+        },
+        {   
+            value: 480,        
+            description: '8 hours'      
         }
     ];
 

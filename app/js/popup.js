@@ -82,6 +82,10 @@ function PopupCtrl($scope, reader) {
     }
   }
   
+  // update unreadcount when popup opens
+  chrome.extension.sendMessage({ method: "updateUnreadCount" });
+  
+  // refresh the list
   $scope.refresh();
   
 };

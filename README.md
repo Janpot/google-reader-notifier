@@ -13,7 +13,7 @@ Supports:
   * Supports custom themes. Choose any color you want for the browseraction through the settings page.
   
 ##Acknowledgements
-  The following projets were used to realise this extension:
+  The following projects were used to realise this extension:
   
   * [AngularJS](http://angularjs.org/)
   * [Bootstrap](http://twitter.github.com/bootstrap/)

@@ -4,6 +4,16 @@ angular.module('Reader.popup', ['Reader.services', 'Reader.directives', 'ngSanit
   
 function PopupCtrl($scope, reader) {
   
+  var openUrl = function (url, background) {
+    var tab = {url: url};
+
+    if(background) {
+      tab.selected =  false;
+    }
+
+    chrome.tabs.create(tab);
+  };
+  
   $scope.views = {
     list: 'list',
     item: 'item'
@@ -21,10 +31,16 @@ function PopupCtrl($scope, reader) {
   $scope.iterator = {};
   $scope.currentList = $scope.lists.all;
   
-  $scope.showItemView = function (index) {
+  $scope.showItemView = function (index, $event) {
     $scope.iterator = $scope.list.getIterator(index);
-    $scope.view = $scope.views.item;
     $scope.iterator.current.markAsRead();
+    if ($event.button === 1) {
+      console.log('middle click');
+      openUrl($scope.iterator.current.url, true);
+      $event.preventDefault();
+    } else {
+      $scope.view = $scope.views.item;
+    }
   };
   
   $scope.showListView = function () {

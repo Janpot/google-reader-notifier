@@ -27,14 +27,17 @@
               ng-class="{read: item.read}" 
               ng-repeat="item in list.items">
             <span class="grn-rating" ng-class="{'grn-starred': item.starred}" ng-click="rate(item)"></span>
-            <div class="grn-item-description" ng-click="showItemView($index)">
-              <div class="grn-column-origin" title="{{item.origin.title}}" ng-bind-html="item.origin.title">
+            <a ng-click="showItemView($index, $event)">
+              <!--This is wrapped in an a element to disable smooth scrolling on middle click-->
+              <div class="grn-item-description">
+                <div class="grn-column-origin" title="{{item.origin.title}}" ng-bind-html="item.origin.title">
+                </div>
+                <div class="grn-column-title" title="{{item.title}}">
+                  <span class="grn-title" ng-bind-html="item.title"></span>
+                  <span class="grn-snippet">{{item.snippet}}</span>
+                </div>
               </div>
-              <div class="grn-column-title" title="{{item.title}}">
-                <span class="grn-title" ng-bind-html="item.title"></span>
-                <span class="grn-snippet">{{item.snippet}}</span>
-              </div>
-            </div>
+            </a>
           </li>
         </ul>
         <div class="grn-loading" ng-show="list.loading">

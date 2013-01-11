@@ -1,10 +1,17 @@
 (function () {
+  
+  var clickBehaviours = {
+    openPopup: 'openPopup',
+    openReader: 'openReader'
+  };
 
   var optionsObj = {
     updateInterval: 5,
     doAnimation: true,
     colorUnread: '#980010',
-    colorNoUnread: '#686868'
+    colorNoUnread: '#686868',
+    clickBehaviour: clickBehaviours.openPopup,
+    defaultList: 'all'
   };
 
   var areas = {
@@ -65,7 +72,9 @@
       } else {
         chrome.storage.local.set(values, callback);        
       }
-    }
+    },
+    
+    clickBehaviours: clickBehaviours
   
   };
   

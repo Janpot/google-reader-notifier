@@ -2,7 +2,7 @@
 
 angular.module('Reader.popup', ['Reader.services', 'Reader.directives', 'ngSanitize']);
   
-function PopupCtrl($scope, reader) {
+function PopupCtrl($scope, reader, options) {
   
   var openUrl = function (url, background) {
     var tab = {url: url};
@@ -71,6 +71,8 @@ function PopupCtrl($scope, reader) {
   
   $scope.showList = function (list) {
     $scope.currentList = list;
+    console.log('setting list: ' + $scope.currentList);
+    options.set({ defaultList: $scope.currentList });
     $scope.refresh();
   };
   
@@ -102,6 +104,18 @@ function PopupCtrl($scope, reader) {
   chrome.extension.sendMessage({ method: "updateUnreadCount" });
   
   // refresh the list
-  $scope.refresh();
+  options.get(function (values) {
+    console.log('options:', values);
+    switch (values.defaultList) {
+      
+      case $scope.lists.unread: 
+        $scope.currentList = $scope.lists.unread;
+        break;
+      case $scope.lists.all:
+      default: 
+        $scope.currentList = $scope.lists.all;
+    }
+    $scope.refresh();
+  });
   
 };

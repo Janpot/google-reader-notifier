@@ -264,11 +264,14 @@ services.factory('options', function($rootScope, $q) {
   });  
   
   return {
-    get: function () {
+    get: function (callback) {
       options.get(function (values) {
         $rootScope.$apply(function () {
           angular.copy(values, controllerObj);
         });
+        if (callback instanceof Function) {
+          callback(controllerObj);
+        }
       });
       return controllerObj;
     },

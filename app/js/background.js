@@ -87,6 +87,7 @@ options.get(function (values) {
   browserAction.setNoUnreadColor(noUnreadColor);
   browserAction.setDoAnimation(values.doAnimation);
   setUpdateInterval(values.updateInterval);
+  setClickBehaviour(values.clickBehaviour);
 });
 
 options.onChange(function (changes) {
@@ -114,6 +115,10 @@ options.onChange(function (changes) {
   if (changes.doAnimation) {
     browserAction.setDoAnimation(changes.doAnimation.newValue);
   }
+  
+  if (changes.clickBehaviour) {
+    setClickBehaviour(changes.clickBehaviour.newValue);
+  }
 });
 
 
@@ -133,7 +138,42 @@ chrome.extension.onMessage.addListener(
 
 
 
+function getReaderTab(callback) {
+  chrome.tabs.getAllInWindow(undefined, function(tabs) {
+    for (var i = 0; i < tabs.length; i++) {
+      var tab = tabs[i];
+      if (tab.url && /https?\:\/\/www.google.com\/reader\/view\//.test(tab.url)) {
+        callback(tab);
+        return;
+      }
+    }
+
+    callback(null);
+  });
+};
+
+function onOpenReaderMouseClick() {
+  refreshUnreadCount();
+  getReaderTab(function(tab) {
+    if (tab) {
+      // Try to reuse an existing Reader tab
+      chrome.tabs.update(tab.id, {selected: true});
+    } else {
+      chrome.tabs.create({url: 'https://www.google.com/reader/'});
+    }
+  });
+};
 
 
+// click behaviour
 
+var setClickBehaviour = function (clickBehaviour) {
+  if(clickBehaviour === options.clickBehaviours.openPopup) {
+    chrome.browserAction.onClicked.removeListener(onOpenReaderMouseClick);
+    chrome.browserAction.setPopup({ popup: 'popup.html' } );
+  } else {
+    chrome.browserAction.onClicked.addListener(onOpenReaderMouseClick);
+    chrome.browserAction.setPopup({ popup: '' } );
+  }
+}
 

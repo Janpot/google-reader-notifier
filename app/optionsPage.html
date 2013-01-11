@@ -15,56 +15,75 @@
     
     <div class="container">
       
+      <h1>
+        Options
+      </h1>
+      
+      
       <form class="form-horizontal">
           
           
         <fieldset>
-          <legend>Options</legend>
+          
+          <legend>Sync</legend>
             
-            <div class="control-group">
-              <label class="control-label" for="refresh-interval">Refresh interval</label>
-              <div class="controls">
-                <select ng-model="options.updateInterval" ng-options="interval.value as interval.description for interval in refreshIntervals">>
-                  <option value=""></option>
-                </select>
-              </div>
+          <div class="control-group">
+            <label class="control-label">Sync options</label>
+            <div class="controls">
+              <label class="checkbox">
+                <input type="checkbox" ng-checked="syncEnabled()" ng-click="enableSync($event)"/>
+                Sync these options across devices.              
+              </label>
             </div>
-              
-            <div class="control-group">
-              <label class="control-label">Icon</label>
-              <div class="controls">
-                <label class="checkbox">
-                  <input type="checkbox" ng-model="options.doAnimation" id="animate-icon"/>
-                  Animate
-                </label>
-              </div>
-            </div>
-            
-            <div class="control-group">
-              <label class="control-label">Sync options</label>
-              <div class="controls">
-                <label class="checkbox">
-                  <input type="checkbox" ng-checked="syncEnabled()" ng-click="enableSync($event)"/>
-                  Enable
-                </label>
-              </div>
-            </div>
-            
-            <div class="control-group">
-              <label class="control-label">Theme</label>
-              <div class="controls">
-                <label class="input">
-                  <input type="color"  class="input-mini" ng-model="options.colorNoUnread"/>
-                  No unread items
-                </label>
-                <label class="input">
-                  <input type="color"  class="input-mini" ng-model="options.colorUnread"/>
-                  Unread items
-                </label>
-              </div>
-            </div>
+          </div>
             
         </fieldset>
+        
+        <fieldset>
+          
+          <legend>Options</legend>
+            
+          <div class="control-group">
+            <label class="control-label" for="refresh-interval">Refresh interval</label>
+            <div class="controls">
+              <select class="inline" ng-model="options.updateInterval" ng-options="interval.value as interval.description for interval in refreshIntervals">
+              </select>
+              <span class="help-block">Time between two consecutive updates of the unread count.</span>
+            </div>
+          </div>
+              
+        </fieldset>
+              
+        <fieldset>
+          
+          <legend>Icon</legend>
+              
+          <div class="control-group">
+            <label class="control-label">Animate</label>
+            <div class="controls">
+              <label class="checkbox">
+                <input type="checkbox" ng-model="options.doAnimation" id="animate-icon"/>
+                Use an animation to indicate new items have arrived.
+              </label>
+            </div>
+          </div>
+          
+          <div class="control-group">
+            <label class="control-label">Color</label>
+            <div class="controls">
+              <label class="input">
+                <input type="color"  class="input-mini" ng-model="options.colorNoUnread"/>
+                When the reading list has no unread items.
+              </label>
+              <label class="input">
+                <input type="color"  class="input-mini" ng-model="options.colorUnread"/>
+                When the reading list has unread items.
+              </label>
+            </div>
+          </div>
+          
+        </fieldset>
+            
       </form>
     </div>
   </body>

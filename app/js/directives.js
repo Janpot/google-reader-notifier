@@ -31,8 +31,10 @@ angular.module('Reader.directives', [])
       restrict: 'E',
       link: function(scope, elm, attr) {
         elm.bind('click', function(e) {
-          openUrl(attr.href, e.button === 1);
-          e.preventDefault();
+          if (attr.href) {
+            openUrl(attr.href, e.button === 1);
+            e.preventDefault();
+          }
         });
       }
     };

@@ -125,6 +125,7 @@ services.factory('reader', function ($http, $q) {
     this.items = [];
     this.continuation;
     this.loading = false;
+    this.empty = false;
     this.loadItems(n);
   };
   
@@ -139,19 +140,19 @@ services.factory('reader', function ($http, $q) {
     
     if (!this.loading) {
       this.loading = true;
-      var _this = this;
+      var self = this;
       $http.get(this.url, {
         params: this.params
       }).success(function onSuccess(data) {
-        console.log(data);
+        self.empty = data.items.length === 0;
         data.items.forEach(function addToList(raw) {
-          _this.items.push(new Item(raw));
+          self.items.push(new Item(raw));
         });
-        _this.continuation = data.continuation;
-        _this.loading = false;
-        deferred.resolve(_this);
+        self.continuation = data.continuation;
+        self.loading = false;
+        deferred.resolve(self);
       }).error(function onError(error) {
-        _this.loading = false;
+        self.loading = false;
         deferred.reject(error);
       });
     } else {

@@ -15,10 +15,11 @@
     
     <div id="list-view" ng-show="view == views.list">
       <header>
-        <button class="btn btn-link" ng-show="currentList != lists.unread" ng-click="showList(lists.unread)">Show unread items</button>
-        <button class="btn btn-link" ng-show="currentList != lists.all" ng-click="showList(lists.all)">Show all items</button>
-        <button class="btn btn-link" ng-click="list.markAllAsRead()">Mark all as read</button>
-        <a class="btn btn-link pull-right" href="https://www.google.com/reader/">Google Reader™</a>
+        <a ng-show="currentList != lists.unread" ng-click="showList(lists.unread)">Show unread items</a>
+        <a ng-show="currentList != lists.all" ng-click="showList(lists.all)">Show all items</a>
+         | 
+        <a ng-click="list.markAllAsRead()">Mark all as read</a>
+        <a class="pull-right" href="https://www.google.com/reader/">Google Reader™</a>
       </header>
       <div class="grn-container" when-scrolled="loadMoreItems()">
         <ul class="grn-items-list">
@@ -36,8 +37,11 @@
             </div>
           </li>
         </ul>
-        <div ng-show="list.loading">
-          Loading...
+        <div class="grn-loading" ng-show="list.loading">
+          <img src="img/loading.gif"/>  
+        </div>
+        <div class="grn-empty" ng-show="list.empty">
+          No items in this list. <span ng-show="currentList == lists.unread">Show <a ng-click="showList(lists.all)">all items</a> instead?</span>
         </div>
       </div>
     </div>

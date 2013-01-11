@@ -1,0 +1,43 @@
+﻿{
+  "browser_action": {
+    "default_icon": "img/icon-32.png",
+    "default_title": "Google Reader Notifier",
+    "default_popup": "popup.html"
+  },
+  "description": "Counts the unread items in Google Reader™ and shows previews in a popup.",
+  "icons": {
+    "16": "img/icon-16.png",
+    "32": "img/icon-32.png",
+    "64": "img/icon-64.png",
+    "128": "img/icon-128.png"
+  },
+  "name": "Notifier for Google Reader™",
+  "permissions": [ 
+    "alarms",
+    "storage",
+    "tabs", 
+    "http://www.google.com/reader/",
+    "https://www.google.com/reader/"
+  ],
+  "version": "2.0",
+  "manifest_version": 2,
+  "options_page": "optionsPage.html",
+  "background": {
+    "scripts": [
+      "js/options.js",
+      "js/http.js",
+      "js/BrowserAction.js",
+      "js/background.js"
+    ],
+    "persistent": false
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://www.google.com/reader/view*",
+        "https://www.google.com/reader/view*"
+      ],
+      "js": ["js/liveUpdater.js"]
+    }
+  ]
+}

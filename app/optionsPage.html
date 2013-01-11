@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html ng-csp="true" ng-app="Reader.optionsPage" >
+  <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
+      <link rel="Stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap.css"/>
+      <script src="lib/angular/angular.js"></script>
+      <script src="js/options.js"></script>
+      <script src="js/directives.js"></script>
+      <script src="js/services.js"></script>
+      <script src="js/optionsPage.js"></script>
+  </head>
+
+  <body ng-controller="OptionsCtrl">
+          
+    
+    <div class="container">
+      
+      <form class="form-horizontal">
+          
+          
+        <fieldset>
+          <legend>Options</legend>
+            
+            <div class="control-group">
+              <label class="control-label" for="refresh-interval">Refresh interval</label>
+              <div class="controls">
+                <select ng-model="options.updateInterval" ng-options="interval.value as interval.description for interval in refreshIntervals">>
+                  <option value=""></option>
+                </select>
+              </div>
+            </div>
+              
+            <div class="control-group">
+              <label class="control-label">Icon</label>
+              <div class="controls">
+                <label class="checkbox">
+                  <input type="checkbox" ng-model="options.doAnimation" id="animate-icon"/>
+                  Animate
+                </label>
+              </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Sync options</label>
+              <div class="controls">
+                <label class="checkbox">
+                  <input type="checkbox" ng-checked="syncEnabled()" ng-click="enableSync($event)"/>
+                  Enable
+                </label>
+              </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Theme</label>
+              <div class="controls">
+                <label class="input">
+                  <input type="color"  class="input-mini" ng-model="options.colorNoUnread"/>
+                  No unread items
+                </label>
+                <label class="input">
+                  <input type="color"  class="input-mini" ng-model="options.colorUnread"/>
+                  Unread items
+                </label>
+              </div>
+            </div>
+            
+        </fieldset>
+      </form>
+    </div>
+  </body>
+</html>

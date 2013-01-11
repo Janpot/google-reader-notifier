@@ -53,16 +53,3 @@ angular.module('Reader.directives', [])
     };
   })
   
-  .directive('input', function() {
-    return {
-      restrict: 'E',
-      require: '?ngModel',
-      link: function(scope, element, attr, ctrl) {
-        if (attr.type !== 'color') {
-          return;
-        }
-        console.log(ctrl);
-      }
-    };
-  });
-  

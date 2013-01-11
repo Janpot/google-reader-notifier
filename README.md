@@ -12,6 +12,11 @@ Supports:
   * Browseraction will be animated when new items arrive. (optional)
   * Supports custom themes. Choose any color you want for the browseraction through the settings page.
   
+##Acknowledgements
+  The following projets were used to realise this extension:
+  
+  * [AngularJS](http://angularjs.org/)
+  * [Bootstrap](http://twitter.github.com/bootstrap/)
   
 ##License
   Copyright (C) 2013 Jan Potoms
@@ -24,7 +29,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   
 ##version history
 
- * ###2.0.1 - 2.0.4: Beta
+###2.0.1 - 2.0.4: Beta
    * Test the extension in the webstore and fix obvious bugs.
- * ###2.0.0: Initial commit
+   
+###2.0.0: Initial commit
    * Reading list, preview items, themes, options.

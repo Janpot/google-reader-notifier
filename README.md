@@ -28,9 +28,13 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   
 ##version history
+###2.0.5 - 2.0.6
+  * Bring back middle click support in the items list.
+  * remember whether all items are shown or only unread items.
+  * Bring back option to open Google Reader instead of a popup.
 
 ###2.0.1 - 2.0.4: Beta
-   * Test the extension in the webstore and fix obvious bugs.
+  * Test the extension in the webstore and fix obvious bugs.
    
 ###2.0.0: Initial commit
-   * Reading list, preview items, themes, options.
+  * Reading list, preview items, themes, options.

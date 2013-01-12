@@ -26,22 +26,20 @@
       <div class="grn-container" when-scrolled="loadMoreItems()">
         <ul class="grn-items-list">
           
-          <li class="grn-list-item" 
-              ng-class="{read: item.read}" 
-              ng-repeat="item in list.items">
+          <li class="grn-list-item" ng-class="{read: item.read}" ng-repeat="item in list.items">
             <span class="grn-star" ng-class="{'grn-starred': item.starred}" ng-click="rate(item)"></span>
-            <a ng-click="showItemView($index, $event)">
-              <!--This is wrapped in an a element to disable smooth scrolling on middle click-->
-              <div class="grn-item-description">
-                <div class="grn-column-origin" title="{{item.origin.title}}">
-                  {{item.origin.title}}
-                </div>
-                <div class="grn-column-title" title="{{item.title}}">
-                  <span class="grn-title">{{item.title}}</span>
-                  <span class="grn-snippet">{{item.snippet}}</span>
-                </div>
-              </div>
-            </a>
+            <div class="grn-click-target" ng-click="showItemView($index)">
+              <span class="grn-item-content" title="{{item.title}}">
+                <a class="grn-item-title" middle-click="openInChrome(item);$event.stopPropagation();">{{item.title}}</a>
+                {{item.snippet}}
+              </span>
+              <span class="grn-item-origin" middle-click="openUrl(item.origin.url, true);$event.stopPropagation();">
+                <a title="{{item.origin.title}}">{{item.origin.title}}</a>
+              </span>
+              <ul class="grn-item-commands">
+                <li><a ng-click="item.markAsRead();$event.stopPropagation();">Mark as read</a></li>
+              </ul>
+            </div>
           </li>
           
         </ul>

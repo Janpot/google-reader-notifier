@@ -135,15 +135,110 @@ body {
       margin: 0px;
       
       .grn-list-item {
-        @item-height: 30px;
         position: relative;
         list-style: none;
         margin: 0px;
         padding: 0px;
-        height: @item-height;
-        line-height: @item-height;
+        height: 50px;
+        overflow: hidden;
         
         background-color: @item-bg-color;
+        @divider-color: darken(@item-bg-color, 15%);
+        .lines-between(1px solid @divider-color);
+        
+        .grn-star {
+          position: relative;
+          top: 5px; left: 3px;
+        }
+        
+        .grn-click-target {
+          position: absolute;
+          top: 0px; bottom: 0px;
+          left: 20px; right: 0px;
+          
+          cursor: pointer;
+          padding-top: 5px;
+          
+          .grn-item-content {
+            .no-wrap();
+            display: block;
+            margin: 0px 5px 0px 0px;
+            color: @item-snippet-color;
+            .grn-item-title {
+              color: @item-title-color;
+            }
+          }
+          
+          @commands-width: 300px;
+          
+          .grn-item-origin {
+            .no-wrap();
+            margin: 0px 5px 0px 0px;
+            position: absolute;
+            left: 100px;
+            display: block;
+            max-width: 400px;
+            a {
+              color: @item-origin-color;
+            }
+          }
+          
+          .grn-item-commands {
+            list-style: none;
+            margin: 0px;
+            max-width: 300px;
+            opacity: 0.2;
+            -webkit-transition: opacity 150ms ease-in;
+            li {
+              display: inline;
+              margin-right: 5px;
+            }
+          }
+          
+          &:hover .grn-item-commands {
+            opacity: 1;
+          }
+        }        
+        
+        &:not(.read) {
+          .grn-item-content {
+            .grn-item-title {
+              font-weight: bold;
+            }
+          }
+          
+          &:hover {
+            background-color: darken(@item-bg-color, 2%);
+          }
+        }
+        
+        &.read {
+          @item-bg-color-read: darken(@item-bg-color, 5%);
+          background-color: @item-bg-color-read;
+          
+          .grn-item-content {
+            color: lighten(@item-snippet-color, 15%);
+            .grn-item-title {
+              font-weight: normal;
+              color: lighten(@item-title-color, 50%);
+            }
+          }
+          
+          /*.grn-item-origin {
+            left: 0px;
+          }*/
+          
+          &:hover {
+            background-color: darken(@item-bg-color-read, 2%);
+          }
+          
+          .grn-item-commands {
+            display: none;
+          }
+        }
+        
+        
+        /*background-color: @item-bg-color;
         @divider-color: darken(@item-bg-color, 15%);
         .lines-between(1px solid @divider-color);        
         overflow: hidden;
@@ -192,11 +287,12 @@ body {
             color: @item-snippet-color;
             
             .grn-title {
-              /*font-weight: bold;*/
+              font-weight: bold;
               color: @item-title-color;
             }            
           }
-        }        
+        }*/
+          
       }
     }
   }

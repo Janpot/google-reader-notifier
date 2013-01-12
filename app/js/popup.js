@@ -4,7 +4,7 @@ angular.module('Reader.popup', ['Reader.services', 'Reader.directives', 'ngSanit
   
 function PopupCtrl($scope, reader, options) {
   
-  var openUrl = function (url, background) {
+  $scope.openUrl = function (url, background) {
     var tab = {url: url};
 
     if(background) {
@@ -31,16 +31,15 @@ function PopupCtrl($scope, reader, options) {
   $scope.iterator = {};
   $scope.currentList = $scope.lists.all;
   
-  $scope.showItemView = function (index, $event) {
+  $scope.showItemView = function (index) {
     $scope.iterator = $scope.list.getIterator(index);
     $scope.iterator.current.markAsRead();
-    if ($event.button === 1) {
-      console.log('middle click');
-      openUrl($scope.iterator.current.url, true);
-      $event.preventDefault();
-    } else {
-      $scope.view = $scope.views.item;
-    }
+    $scope.view = $scope.views.item;
+  };
+  
+  $scope.openInChrome = function (item) {
+    item.markAsRead();
+    $scope.openUrl(item.url, true);
   };
   
   $scope.showListView = function () {

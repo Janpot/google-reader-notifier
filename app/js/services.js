@@ -261,7 +261,8 @@ services.factory('reader', function ($http, $q) {
   ListIterator.prototype.moveNext = function () {
     this.init(this.index + 1);
     // ensure more items in the list
-    if ((this.index >= this.list.items.length - 5) && !this.list.loading && this.list.canLoadMore) {
+    var needsMoreItems = (this.index >= this.list.items.length - 5) && !this.list.loading && this.list.canLoadMore();
+    if (needsMoreItems) {
       this.list.loadItems(10);
     }
   };

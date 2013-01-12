@@ -29,6 +29,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   
 ##version history
 
+###2.1.1: 
+  * allow ctrl+click for links in feed content to open in the background.
+
 ###2.1.0: Cut me some slack
   * redesign items list to be able to mark as read without previewing.
 

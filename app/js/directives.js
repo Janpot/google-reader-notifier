@@ -30,10 +30,11 @@ angular.module('Reader.directives', [])
     return {
       restrict: 'E',
       link: function(scope, elm, attr) {
-        elm.bind('click', function(e) {
+        elm.bind('click', function(event) {
           if (attr.href) {
-            openUrl(attr.href, e.button === 1);
-            e.preventDefault();
+            var clickedMiddle = (event.button === 1) || (event.button === 0 && event.ctrlKey);
+            openUrl(attr.href, clickedMiddle);
+            event.preventDefault();
           }
         });
       }

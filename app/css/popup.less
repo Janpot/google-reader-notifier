@@ -28,22 +28,22 @@
   text-overflow: ellipsis;
 }
 
-.grn-rating {
-  background: url('/img/rating.png') no-repeat 0px 0px;
+.grn-star {
+  background: url('/img/star-empty.png');
   width: 15px;
   height: 15px;
   cursor: pointer;
   overflow: hidden;
   padding: 0px;
   display: inline-block;
-  baseline-shift: -10px;
+  vertical-align: -2px;
 
   &:hover {
-      background-position: 0px -15px
+      background: url('/img/star-hover.png');
   }
   
   &.grn-starred {
-      background-position: 0px -30px
+      background: url('/img/star-full.png');
   }
 }
 
@@ -148,9 +148,8 @@ body {
         .lines-between(1px solid @divider-color);        
         overflow: hidden;
         
-        .grn-rating {
+        .grn-star {
           margin: 0px 3px;
-          vertical-align: -2px;
         }
         
         &:hover {
@@ -216,7 +215,7 @@ body {
     border-bottom: 1px solid #DDD;
     position: relative;
     
-    .grn-rating {
+    .grn-star {
       margin: 7px 5px 0px 0px;
     }
     

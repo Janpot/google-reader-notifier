@@ -27,7 +27,7 @@
           <li class="grn-list-item" 
               ng-class="{read: item.read}" 
               ng-repeat="item in list.items">
-            <span class="grn-rating" ng-class="{'grn-starred': item.starred}" ng-click="rate(item)"></span>
+            <span class="grn-star" ng-class="{'grn-starred': item.starred}" ng-click="rate(item)"></span>
             <a ng-click="showItemView($index, $event)">
               <!--This is wrapped in an a element to disable smooth scrolling on middle click-->
               <div class="grn-item-description">
@@ -64,7 +64,7 @@
             <i class="icon-chevron-right"></i>
           </button>      
         </div>
-        <span class="grn-rating" ng-class="{'grn-starred': iterator.current.starred}" ng-click="rate(iterator.current)"></span>
+        <span class="grn-star" ng-class="{'grn-starred': iterator.current.starred}" ng-click="rate(iterator.current)"></span>
         <div class="grn-info"> 
           <p>
             <a href="{{iterator.current.url}}" class="grn-title" title="{{iterator.current.title}}" ng-bind-html="iterator.current.title"></a>

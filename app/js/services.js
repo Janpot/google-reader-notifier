@@ -105,6 +105,18 @@ services.factory('reader', function ($http, $q) {
     });
   };
   
+  Item.prototype.markUnread = function () {
+    self = this;
+    editTag({
+      i: this.id,
+      a: 'user/-/state/com.google/fresh',
+      r: 'user/-/state/com.google/read'
+    }).then(function () {
+      self.read = false;
+      chrome.extension.sendMessage({ method: "updateUnreadCount" });
+    });
+  };
+  
   Item.prototype.star = function () {
     self = this;
     addTag(this.id, 'user/-/state/com.google/starred').then(function () {

@@ -55,13 +55,13 @@
     <div id="item-view" ng-show="view == views.item">
       <header>
         <div class="grn-navigation btn-group">
-          <button class="btn btn-small" ng-click="showPreviousItem()" ng-disabled="!iterator.hasPrevious()" title="{{iterator.previousDescr}}">
+          <button class="btn" ng-click="showPreviousItem()" ng-disabled="!iterator.hasPrevious()" title="{{iterator.previousDescr}}">
             <i class="icon-chevron-left"></i>
           </button>
-          <button class="btn btn-small" ng-click="showListView()" title="list">
+          <button class="btn" ng-click="showListView()" title="list">
             <i class="icon-align-justify"></i>
           </button>          
-          <button class="btn btn-small" ng-click="showNextItem()" ng-disabled="!iterator.hasNext()" title="{{iterator.nextDescr}}">
+          <button class="btn" ng-click="showNextItem()" ng-disabled="!iterator.hasNext()" title="{{iterator.nextDescr}}">
             <i class="icon-chevron-right"></i>
           </button>      
         </div>

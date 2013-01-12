@@ -4,6 +4,27 @@ var services = angular.module('Reader.services', []);
 
 services.factory('reader', function ($http, $q) {
   
+  var normalize = function (str) {
+    var subs = {
+      'amp': '&',
+      'apos': '\'',
+      'quot': '\"',
+      'lt': '<',
+      'gt': '>'  
+    }
+    return str.replace(/&([^;]+);/g, function (match, char) {
+      if (subs[char]!== undefined) {
+        return subs[char];
+      } else {
+        var asciiMatch = /^#(\d+)$/.exec(char);
+        if (asciiMatch) {
+          return String.fromCharCode(asciiMatch[1]);
+        }
+      }      
+      return match;
+    });
+  };
+  
   var hasCategory = function (raw, categoryMatcher) {
     return raw.categories.some(function matches(category) {
       return categoryMatcher.test(category);
@@ -86,10 +107,10 @@ services.factory('reader', function ($http, $q) {
     this.snippet = tmp.textContent || tmp.innerText;
     
     // create a viewmodel
-    this.title = raw.title;
+    this.title = normalize(raw.title);
     this.url = raw.alternate[0].href;
     this.origin = {
-      title: raw.origin.title,
+      title: normalize(raw.origin.title),
       url: raw.origin.htmlUrl
     };
     this.read = hasCategory(raw, /^user\/[-\d]+\/state\/com\.google\/read$/);
@@ -156,6 +177,7 @@ services.factory('reader', function ($http, $q) {
       $http.get(this.url, {
         params: this.params
       }).success(function onSuccess(data) {
+        console.log(data);
         self.empty = data.items.length === 0;
         data.items.forEach(function addToList(raw) {
           self.items.push(new Item(raw));

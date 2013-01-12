@@ -3,6 +3,7 @@
   <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="Stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap.css"/>
+    <link rel="Stylesheet" type="text/css" href="lib/font-awesome/css/font-awesome.min.css"/>
     <link rel="Stylesheet" type="text/css" href="css/popup.css"/>
     <script src="lib/angular/angular.js"></script>
     <script src="lib/angular/angular-sanitize.js"></script>
@@ -24,6 +25,7 @@
       </header>
       <div class="grn-container" when-scrolled="loadMoreItems()">
         <ul class="grn-items-list">
+          
           <li class="grn-list-item" 
               ng-class="{read: item.read}" 
               ng-repeat="item in list.items">
@@ -41,6 +43,7 @@
               </div>
             </a>
           </li>
+          
         </ul>
         <div class="grn-loading" ng-show="list.loading">
           <img src="img/loading.gif"/>  
@@ -67,10 +70,14 @@
         <span class="grn-star" ng-class="{'grn-starred': iterator.current.starred}" ng-click="rate(iterator.current)"></span>
         <div class="grn-info"> 
           <p>
-            <a href="{{iterator.current.url}}" class="grn-title" title="{{iterator.current.title}}" ng-bind-html="iterator.current.title"></a>
+            <a href="{{iterator.current.url}}" class="grn-title" title="{{iterator.current.title}}">
+              {{iterator.current.title}}
+            </a>
           </p>
           <p>
-            <a href="{{iterator.current.origin.url}}" class="grn-origin" title="{{iterator.current.origin.title}}" ng-bind-html="iterator.current.origin.title"></a>
+            <a href="{{iterator.current.origin.url}}" class="grn-origin" title="{{iterator.current.origin.title}}">
+              {{iterator.current.origin.title}}
+            </a>
           </p>
         </div>
       </header>

@@ -59,13 +59,14 @@ function PopupCtrl($scope, reader, options) {
   $scope.refresh = function () {
     switch ($scope.currentList) {
       case $scope.lists.unread:
-        $scope.list = reader.getUnreadList(40);
+        $scope.list = reader.getUnreadList();
         break;
       case $scope.lists.all:
       default:
         $scope.currentList = $scope.lists.all;
-        $scope.list = reader.getReadingList(40);
+        $scope.list = reader.getReadingList();
     }
+    $scope.list.loadItems(40);
   };
   
   $scope.showList = function (list) {
@@ -99,6 +100,10 @@ function PopupCtrl($scope, reader, options) {
     }
   }
   
+  $scope.$watch('list.error', function (value) {
+    console.log('error', value);
+  });
+  
   // update unreadcount when popup opens
   chrome.extension.sendMessage({ method: "updateUnreadCount" });
   
@@ -114,6 +119,7 @@ function PopupCtrl($scope, reader, options) {
       default: 
         $scope.currentList = $scope.lists.all;
     }
+    
     $scope.refresh();
   });
   

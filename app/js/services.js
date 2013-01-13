@@ -2,7 +2,7 @@
 
 var services = angular.module('Reader.services', []);
 
-services.factory('reader', function ($http, $q) {
+services.factory('reader', function ($rootScope, $http, $q) {
   
   var normalize = function (str) {
     var subs = {
@@ -159,7 +159,6 @@ services.factory('reader', function ($http, $q) {
     this.continuation;
     this.loading = false;
     this.empty = false;
-    this.loadItems(n);
   };
   
   List.prototype.loadItems = function (n) {
@@ -172,8 +171,8 @@ services.factory('reader', function ($http, $q) {
     this.params.c = this.continuation;
     
     if (!this.loading) {
-      this.loading = true;
       var self = this;
+      self.loading = true;
       $http.get(this.url, {
         params: this.params
       }).success(function onSuccess(data) {
@@ -185,9 +184,9 @@ services.factory('reader', function ($http, $q) {
         self.continuation = data.continuation;
         self.loading = false;
         deferred.resolve(self);
-      }).error(function onError(error) {
+      }).error(function onError() {
         self.loading = false;
-        deferred.reject(error);
+        deferred.reject('Failed to load items');
       });
     } else {
       deferred.reject(new Error('loading'));
@@ -303,10 +302,10 @@ services.factory('options', function($rootScope, $q) {
       options.get(function (values) {
         $rootScope.$apply(function () {
           angular.copy(values, controllerObj);
+          if (callback instanceof Function) {
+            callback(controllerObj);
+          }
         });
-        if (callback instanceof Function) {
-          callback(controllerObj);
-        }
       });
       return controllerObj;
     },

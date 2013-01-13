@@ -29,10 +29,17 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   
 ##version history
 
+###2.1.3: Oops
+  * Was accidentally loading 240 items instead of 20 at startup.
+  
+###2.1.2: Annoyances
+  * Don't load all images when creating a snippet.
+  * Display errors when the feed don't load.
+
 ###2.1.1: Clean it up
   * Allow ctrl+click for links in feed content to open in the background.
   * Fix bug where iterator could load more items when it shouldn't.
-  * larger buttons for navigation in preview.
+  * larger buttons for navigation in preview.  
 
 ###2.1.0: Cut me some slack
   * redesign items list to be able to mark as read without previewing.

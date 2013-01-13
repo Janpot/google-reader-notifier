@@ -68,7 +68,7 @@ function PopupCtrl($scope, reader, options) {
         $scope.list = reader.getReadingList();
     }
     $scope.error = null;
-    $scope.list.loadItems(240).then(null, function onError (error) {
+    $scope.list.loadItems(20).then(null, function onError (error) {
       $scope.error = error;
     });
   };
@@ -81,7 +81,7 @@ function PopupCtrl($scope, reader, options) {
   };
   
   $scope.loadMoreItems = function () {
-    $scope.list.loadItems(20);
+    $scope.list.loadItems(10);
     return true;
   };
   

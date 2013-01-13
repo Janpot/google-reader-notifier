@@ -23,6 +23,7 @@
         <a ng-click="list.markAllAsRead()">Mark all as read</a>
         <a class="pull-right" href="https://www.google.com/reader/">Google Reader™</a>
       </header>
+      
       <div class="grn-container" when-scrolled="loadMoreItems()">
         <ul class="grn-items-list">
           
@@ -46,8 +47,11 @@
         <div class="grn-loading" ng-show="list.loading">
           <img src="img/loading.gif"/>  
         </div>
-        <div class="grn-empty" ng-show="list.empty">
-          No items in this list. <span ng-show="currentList == lists.unread">Show <a ng-click="showList(lists.all)">all items</a> instead?</span>
+        <div class="grn-message" ng-show="list.empty">
+          No items in this list. <span ng-show="currentList != lists.all">Show <a ng-click="showList(lists.all)">all items</a> instead?</span>
+        </div>
+        <div class="grn-message" ng-show="error">
+          Error while loading this list, open <a href="https://www.google.com/reader/">Google Reader</a> instead?            
         </div>
       </div>
     </div>

@@ -103,8 +103,8 @@ services.factory('reader', function ($rootScope, $http, $q) {
     
     // create a snippet
     var tmp = document.createElement('div');
-    tmp.innerHTML = this.content;
-    this.snippet = tmp.textContent || tmp.innerText;
+    tmp.innerHTML = this.content.replace(/<img[^>]*>/g,'');
+    this.snippet = tmp.textContent;
     
     // create a viewmodel
     this.title = normalize(raw.title);
@@ -189,7 +189,7 @@ services.factory('reader', function ($rootScope, $http, $q) {
         deferred.reject('Failed to load items');
       });
     } else {
-      deferred.reject(new Error('loading'));
+      deferred.reject('Failed to load items');
     }
     
     return deferred.promise;

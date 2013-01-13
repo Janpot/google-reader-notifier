@@ -24,6 +24,7 @@ function PopupCtrl($scope, reader, options) {
     unread: 'unread'
   };
   
+  $scope.error = null;
   $scope.view = $scope.views.list;  
   $scope.list = {
     items: []
@@ -66,7 +67,10 @@ function PopupCtrl($scope, reader, options) {
         $scope.currentList = $scope.lists.all;
         $scope.list = reader.getReadingList();
     }
-    $scope.list.loadItems(40);
+    $scope.error = null;
+    $scope.list.loadItems(240).then(null, function onError (error) {
+      $scope.error = error;
+    });
   };
   
   $scope.showList = function (list) {
@@ -100,7 +104,7 @@ function PopupCtrl($scope, reader, options) {
     }
   }
   
-  $scope.$watch('list.error', function (value) {
+  $scope.$watch('error', function (value) {
     console.log('error', value);
   });
   

@@ -25,10 +25,10 @@
         <a class="pull-right" href="https://www.google.com/reader/">Google Reader™</a>
       </header>
       
-      <div class="grn-container" when-scrolled="loadMoreItems()">
+      <div class="grn-container" when-scrolled="loadMoreItems()" scroll-nice=".scroll-item">
         <ul class="grn-items-list">
           
-          <li class="grn-list-item" ng-class="{read: item.read}" ng-repeat="item in list.items">
+          <li class="grn-list-item scroll-item" ng-class="{read: item.read}" ng-repeat="item in list.items">
             <span class="grn-star" ng-class="{'grn-starred': item.starred}" ng-click="rate(item)"></span>
             <div class="grn-click-target" ng-click="showItemView($index)">
               <span class="grn-item-content" title="{{item.title}}">

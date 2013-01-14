@@ -73,3 +73,43 @@ angular.module('Reader.directives', [])
     };
   })
   
+ .directive('scrollNice', function($parse) {
+    
+    return {
+      restrict: 'A',
+      link: function(scope, element, attr) {
+        var scrollItems = function (n) {
+          var items = element[0].querySelectorAll(attr.scrollNice);
+          
+          var scrollTop = element[0].scrollTop;
+          var parentOffsetTop = element[0].offsetTop;
+          
+          // find the first visible item
+          var firstItemViewportTop = -1000000;
+          var firstVisibleItemIdx = 0;
+          
+          for (var i = 0; i < items.length; i++) {
+            var item = items.item(i);
+            var itemTop = item.offsetTop - parentOffsetTop;
+            
+            var viewportTop = itemTop - scrollTop;
+            if (viewportTop <= 0 && viewportTop > firstItemViewportTop) {
+              firstVisibleItemIdx = i;
+            }
+            
+          }
+          // get the next item
+          nextIndex = Math.max(Math.min(firstVisibleItemIdx - n, items.length), 0);
+          var topElement = items.item(nextIndex);
+          // scroll to position
+          element[0].scrollTop = topElement.offsetTop - parentOffsetTop;
+        };
+        
+        element.bind('mousewheel', function(event) {          
+          var amount = Math.round(event.wheelDeltaY / 120);
+          scrollItems(amount);
+          event.preventDefault();
+        });
+      }
+    };
+  })

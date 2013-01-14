@@ -108,7 +108,10 @@ services.factory('reader', function ($rootScope, $http, $q) {
     
     // create a viewmodel
     this.title = normalize(raw.title);
-    this.url = raw.alternate[0].href;
+    this.url = ''
+    if (raw.alternate && raw.alternate[0] && raw.alternate[0].href) {
+      this.url = raw.alternate[0].href;
+    }
     this.origin = {
       title: normalize(raw.origin.title),
       url: raw.origin.htmlUrl

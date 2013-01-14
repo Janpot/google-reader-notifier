@@ -33,6 +33,11 @@ I'm happy to accept bug fixes. I can't promise to accept new features.
 
 ##version history
 
+###2.1.8: Reach for the stars
+  * Support starred list
+  * expand toolbar
+  * fix bug wrong items opened in unread view
+
 ###2.1.7: Stars
   * Add refresh button.
   * filter unread list.

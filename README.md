@@ -33,6 +33,10 @@ I'm happy to accept bug fixes. I can't promise to accept new features.
 
 ##version history
 
+###2.1.7: Stars
+  * Add refresh button.
+  * filter unread list.
+
 ###2.1.6: Tweak
   * Scroll per item in the list.
   * Better performance when marking as read/starring items.

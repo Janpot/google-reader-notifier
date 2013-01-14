@@ -298,6 +298,10 @@ services.factory('reader', function ($rootScope, $http, $q) {
       return new List('https://www.google.com/reader/api/0/stream/contents/user/-/state/com.google/reading-list', n, {
         xt: 'user/-/state/com.google/read'
       });
+    },
+    
+    getStarredList: function (n) {
+      return new List('https://www.google.com/reader/api/0/stream/contents/user/-/state/com.google/starred', n);
     }
   };
 });

@@ -36,6 +36,14 @@ function PopupCtrl($scope, $filter, reader, options) {
       filter: {
         read: false
       }
+    },
+    
+    starred: {
+      name: 'starred',
+      list: reader.getStarredList(),
+      filter: {
+        starred: true
+      }
     }
     
   };
@@ -45,8 +53,10 @@ function PopupCtrl($scope, $filter, reader, options) {
   $scope.iterator = {};
   $scope.reader = $scope.readers.all;
   
-  $scope.showItemView = function (index) {
+  $scope.showItemView = function (item) {
+    var index = $scope.reader.list.items.indexOf(item);
     $scope.iterator = $scope.reader.list.getIterator(index);
+    
     analytics.itemViewedIn($scope.iterator.current, analytics.views.popup);
     $scope.iterator.current.markAsRead();
     $scope.view = $scope.views.item;
@@ -108,12 +118,18 @@ function PopupCtrl($scope, $filter, reader, options) {
   // update unreadcount when popup opens
   chrome.extension.sendMessage({ method: "updateUnreadCount" });
   
+  var getReaderByName = function (name) {
+    for (var property in $scope.readers) {
+      if ($scope.readers[property].name === name) {
+        return $scope.readers[property];
+      }
+    }
+    return $scope.readers.all;
+  };
+  
   // refresh the list
   options.get(function (values) {
-    var defaultList = values.defaultList;
-    if (defaultList && $scope.readers[defaultList]) {
-      $scope.reader = $scope.readers[defaultList];
-    }    
+    $scope.reader = getReaderByName(values.defaultList);   
     $scope.refresh();
   });
   

@@ -31,6 +31,7 @@ angular.module('Reader.directives', [])
       restrict: 'E',
       link: function(scope, elm, attr) {
         elm.bind('click', function(event) {
+          console.log('click a');
           if (attr.href) {
             var clickedMiddle = (event.button === 1) || (event.button === 0 && event.ctrlKey);
             openUrl(attr.href, clickedMiddle);
@@ -62,6 +63,7 @@ angular.module('Reader.directives', [])
       link: function(scope, element, attr) {
         var fn = $parse(attr.middleClick);
         element.bind('click', function(event) {
+          console.log('click middleClick');
           var clickedMiddle = (event.button === 1) || (event.button === 0 && event.ctrlKey);
           if (clickedMiddle) {
             scope.$apply(function() {
@@ -99,6 +101,7 @@ angular.module('Reader.directives', [])
             var viewportTop = itemTop - scrollTop;
             if (viewportTop <= 0 && viewportTop > firstItemViewportTop) {
               firstVisibleItemIdx = i;
+              firstItemViewportTop = viewportTop;
             }
             
           }

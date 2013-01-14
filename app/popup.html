@@ -18,17 +18,17 @@
     
     <div id="list-view" ng-show="view == views.list">
       <header>
-        <a ng-show="currentList != lists.unread" ng-click="showList(lists.unread)">Show unread items</a>
-        <a ng-show="currentList != lists.all" ng-click="showList(lists.all)">Show all items</a>
-         | 
-        <a ng-click="list.markAllAsRead()">Mark all as read</a>
+        <a ng-click="refresh()">Refresh</a>
+        <a ng-show="reader != readers.unread" ng-click="showList(readers.unread)">Show unread items</a>
+        <a ng-show="reader != readers.all" ng-click="showList(readers.all)">Show all items</a>
+        <a ng-click="reader.list.markAllAsRead()">Mark all as read</a>
         <a class="pull-right" href="https://www.google.com/reader/">Google Reader™</a>
       </header>
       
       <div class="grn-container ng-cloak" when-scrolled="loadMoreItems()" scroll-nice=".scroll-item">
         
         <ul class="grn-items-list">          
-          <li class="grn-list-item scroll-item" ng-class="{read: item.read}" ng-repeat="item in list.items">
+          <li class="grn-list-item scroll-item" ng-class="{read: item.read}" ng-repeat="item in filterItems()">
             <span class="grn-star" ng-class="{'grn-starred': item.starred}" ng-click="rate(item)"></span>
             <div class="grn-click-target" ng-click="showItemView($index)">
               <span class="grn-item-content" title="{{item.title}}">
@@ -45,13 +45,13 @@
           </li>          
         </ul>
         
-        <div class="grn-loading scroll-item" ng-show="list.loading">
+        <div class="grn-loading scroll-item" ng-show="reader.list.loading">
           <img src="img/loading.gif"/>  
         </div>
       </div>
       
-      <div class="grn-message" ng-show="list.empty">
-        No items in this list. <span ng-show="currentList != lists.all">Show <a ng-click="showList(lists.all)">all items</a> instead?</span>
+      <div class="grn-message" ng-show="filterItems().length <= 0 && !reader.list.loading">
+        No items in this list. <span ng-show="currentList != readers.all">Show <a ng-click="showList(readers.all)">all items</a> instead?</span>
       </div>
       
       <div class="grn-message" ng-show="error">

@@ -175,14 +175,19 @@ services.factory('reader', function ($rootScope, $http, $q) {
     this.empty = false;
   };
   
-  List.prototype.loadItems = function (n) {
+  List.prototype.loadItems = function (n, refresh) {
     var deferred = $q.defer();
     
     this.params.output = 'json';
     this.params.ck = Date.now();
     this.params.client = 'notifier';
     this.params.n = n || 1;
-    this.params.c = this.continuation;
+    
+    if (refresh) {
+      this.items = [];
+    } else {
+      this.params.c = this.continuation;
+    }
     
     if (!this.loading) {
       var self = this;

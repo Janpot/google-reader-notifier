@@ -2,7 +2,7 @@
 
 angular.module('Reader.popup', ['Reader.services', 'Reader.directives', 'ngSanitize']);
   
-function PopupCtrl($scope, reader, options) {
+function PopupCtrl($scope, $filter, reader, options) {
   
   
   $scope.openUrl = function (url, background) {
@@ -21,23 +21,32 @@ function PopupCtrl($scope, reader, options) {
   $scope.views = {
     list: 'list',
     item: 'item'
-  };  
+  };
   
-  $scope.lists = {
-    all: 'all',
-    unread: 'unread'
+  $scope.readers = {
+    
+    all: {
+      name: 'all',
+      list: reader.getReadingList()
+    },
+    
+    unread: {
+      name: 'unread',
+      list: reader.getUnreadList(),
+      filter: {
+        read: false
+      }
+    }
+    
   };
   
   $scope.error = null;
-  $scope.view = $scope.views.list;  
-  $scope.list = {
-    items: []
-  };
+  $scope.view = $scope.views.list;
   $scope.iterator = {};
-  $scope.currentList = $scope.lists.all;
+  $scope.reader = $scope.readers.all;
   
   $scope.showItemView = function (index) {
-    $scope.iterator = $scope.list.getIterator(index);
+    $scope.iterator = $scope.reader.list.getIterator(index);
     analytics.itemViewedIn($scope.iterator.current, analytics.views.popup);
     $scope.iterator.current.markAsRead();
     $scope.view = $scope.views.item;
@@ -65,30 +74,26 @@ function PopupCtrl($scope, reader, options) {
     $scope.iterator.current.markAsRead();
   };
   
-  $scope.refresh = function () {
-    switch ($scope.currentList) {
-      case $scope.lists.unread:
-        $scope.list = reader.getUnreadList();
-        break;
-      case $scope.lists.all:
-      default:
-        $scope.currentList = $scope.lists.all;
-        $scope.list = reader.getReadingList();
-    }
+  $scope.refresh = function () {  
     $scope.error = null;
-    $scope.list.loadItems(20).then(null, function onError (error) {
+    $scope.reader.list.loadItems(20, true).then(null, function onError (error) {
       $scope.error = error;
     });
   };
   
+  var filter = $filter('filter');
+  $scope.filterItems = function() {
+    return filter($scope.reader.list.items, $scope.reader.filter);
+  }
+  
   $scope.showList = function (list) {
-    $scope.currentList = list;
-    options.set({ defaultList: $scope.currentList });
+    $scope.reader = list;
+    options.set({ defaultList: $scope.reader.name });
     $scope.refresh();
   };
   
   $scope.loadMoreItems = function () {
-    $scope.list.loadItems(10);
+    $scope.reader.list.loadItems(10);
     return true;
   };
   
@@ -106,8 +111,8 @@ function PopupCtrl($scope, reader, options) {
   // refresh the list
   options.get(function (values) {
     var defaultList = values.defaultList;
-    if (defaultList && $scope.lists[defaultList]) {
-      $scope.currentList = defaultList;
+    if (defaultList && $scope.readers[defaultList]) {
+      $scope.reader = $scope.readers[defaultList];
     }    
     $scope.refresh();
   });

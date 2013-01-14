@@ -122,10 +122,13 @@ services.factory('reader', function ($rootScope, $http, $q) {
   };
   
   Item.prototype.markAsRead = function () {
+    var oldValue = this.read;
+    this.read = true;
     self = this;
-    addTag(this.id, 'user/-/state/com.google/read').then(function () {
-      self.read = true;
+    addTag(this.id, 'user/-/state/com.google/read').then(function onSuccess() {
       chrome.extension.sendMessage({ method: "updateUnreadCount" });
+    }, function onError() {
+      self.read = oldValue;
     });
   };
   
@@ -142,16 +145,20 @@ services.factory('reader', function ($rootScope, $http, $q) {
   };
   
   Item.prototype.star = function () {
+    var oldValue = this.starred;
+    this.starred = true;
     self = this;
-    addTag(this.id, 'user/-/state/com.google/starred').then(function () {
-      self.starred = true;
+    addTag(this.id, 'user/-/state/com.google/starred').then(null, function onError() {
+      self.starred = oldValue;
     });
   };
   
   Item.prototype.unStar = function () {
+    var oldValue = this.starred;
+    this.starred = false;
     self = this;
-    removeTag(this.id, 'user/-/state/com.google/starred').then(function () {
-      self.starred = false;
+    removeTag(this.id, 'user/-/state/com.google/starred').then(null, function onError() {
+      self.starred = oldValue;
     });
   };
   

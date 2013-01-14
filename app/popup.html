@@ -25,7 +25,7 @@
         <a class="pull-right" href="https://www.google.com/reader/">Google Reader™</a>
       </header>
       
-      <div class="grn-container" when-scrolled="loadMoreItems()" scroll-nice=".scroll-item">
+      <div class="grn-container ng-cloak" when-scrolled="loadMoreItems()" scroll-nice=".scroll-item">
         
         <ul class="grn-items-list">          
           <li class="grn-list-item scroll-item" ng-class="{read: item.read}" ng-repeat="item in list.items">
@@ -59,7 +59,7 @@
       </div>
     </div>
     
-    <div id="item-view" ng-show="view == views.item">
+    <div id="item-view" ng-show="view == views.item" class="ng-cloak">
       <header>
         <div class="grn-navigation btn-group">
           <button class="btn" ng-click="showPreviousItem()" ng-disabled="!iterator.hasPrevious()" title="{{iterator.previousDescr}}">
@@ -80,6 +80,7 @@
             </a>
           </p>
           <p>
+            <span class="grn-time">{{iterator.current.time | date:'MMM d, h:mm a'}}</span> by 
             <a href="{{iterator.current.origin.url}}" class="grn-origin" title="{{iterator.current.origin.title}}">
               {{iterator.current.origin.title}}
             </a>

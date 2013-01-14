@@ -35,6 +35,8 @@ I'm happy to accept bug fixes. I can't promise to accept new features.
 
 ###Unreleased:
   * Scroll per item in the list.
+  * Better performance when marking as read/starring items.
+  * Show published time with items.
 
 ###2.1.5: Very old bugs
   * Fix unread count to 0 when last item is read in Google Reader.

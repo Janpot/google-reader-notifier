@@ -119,6 +119,10 @@ services.factory('reader', function ($rootScope, $http, $q) {
     this.read = hasCategory(raw, /^user\/[-\d]+\/state\/com\.google\/read$/);
     this.starred = hasCategory(raw, /^user\/[-\d]+\/state\/com\.google\/starred$/);
     this.id = raw.id;
+    
+    if (raw.published) {
+      this.time = new Date(raw.published * 1000);
+    }
   };
   
   Item.prototype.markAsRead = function () {

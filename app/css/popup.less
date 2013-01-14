@@ -147,7 +147,7 @@ body {
         
         .grn-star {
           position: relative;
-          top: 5px; left: 3px;
+          top: 4px; left: 3px;
         }
         
         .grn-click-target {
@@ -253,12 +253,11 @@ body {
   header {
     .box(horizontal);
     
-    /*padding: 3px;*/
     border-bottom: 1px solid #DDD;
     position: relative;
     
     .grn-star {
-      margin: 7px 5px 0px 0px;
+      margin: 7px 5px 0px 5px;
     }
     
     .grn-navigation {
@@ -296,6 +295,10 @@ body {
         color: @item-title-color;
       }
       
+      .grn-time {        
+        color: lighten(@item-title-color, 50%);
+      }
+      
       .grn-origin {
         color: @item-origin-color;
       }
@@ -316,4 +319,9 @@ body {
       text-align: left;
     }
   }
+}
+
+
+.ng-cloak {
+  display: none !important;
 }

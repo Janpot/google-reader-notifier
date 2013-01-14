@@ -19,7 +19,8 @@ Supports:
   * [Bootstrap](http://twitter.github.com/bootstrap/)
   
 ##License
-  Copyright (C) 2013 Jan Potoms
+
+Copyright (C) 2013 Jan Potoms
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -27,7 +28,17 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   
+##Contributions
+I'm happy to accept bug fixes. I can't promise to accept new features.
+
 ##version history
+
+###2.1.5: Very old bugs
+  * Fix unread count to 0 when last item is read in Google Reader.
+  * Bug fix for items without a url.
+
+###2.1.4: Spy games
+  * Add Google Analytics support
 
 ###2.1.3: Oops
   * Was accidentally loading 240 items instead of 20 at startup.

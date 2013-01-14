@@ -33,7 +33,7 @@ I'm happy to accept bug fixes. I can't promise to accept new features.
 
 ##version history
 
-###Unreleased:
+###2.1.6: Tweak
   * Scroll per item in the list.
   * Better performance when marking as read/starring items.
   * Show published time with items.

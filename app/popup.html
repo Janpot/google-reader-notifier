@@ -36,7 +36,7 @@
                 {{item.snippet}}
               </span>
               <span class="grn-item-origin" middle-click="openUrl(item.origin.url, true);$event.stopPropagation();">
-                <a title="{{item.origin.title}}">{{item.origin.title}}</a>
+                by <a title="{{item.origin.title}}">{{item.origin.title}}</a>
               </span>
               <ul class="grn-item-commands">
                 <li><a ng-click="item.markAsRead();$event.stopPropagation();">Mark as read</a></li>

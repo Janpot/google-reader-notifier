@@ -114,6 +114,21 @@ angular.module('Reader.directives', [])
           scrollItems(amount);
           event.preventDefault();
         });
+        
+        element[0].tabIndex = 0;
+        
+        element.bind('keydown', function(event) {
+          switch (event.keyCode) {
+            case 38: // down
+              scrollItems(1);
+              event.preventDefault();
+              break;
+            case 40: // up
+              scrollItems(-1);
+              event.preventDefault();
+              break;
+          }
+        });
       }
     };
   })

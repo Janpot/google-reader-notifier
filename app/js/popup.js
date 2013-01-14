@@ -4,14 +4,18 @@ angular.module('Reader.popup', ['Reader.services', 'Reader.directives', 'ngSanit
   
 function PopupCtrl($scope, reader, options) {
   
+  
   $scope.openUrl = function (url, background) {
-    var tab = {url: url};
-
-    if(background) {
-      tab.selected =  false;
+    // TODO: move this to a shared lib (for directive)
+    if (/^https?:\/\//i.test(url)) {    
+      var tab = {url: url};
+  
+      if(background) {
+        tab.selected =  false;
+      }
+  
+      chrome.tabs.create(tab);
     }
-
-    chrome.tabs.create(tab);
   };
   
   $scope.views = {

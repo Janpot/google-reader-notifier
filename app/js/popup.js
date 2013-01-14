@@ -34,11 +34,13 @@ function PopupCtrl($scope, reader, options) {
   
   $scope.showItemView = function (index) {
     $scope.iterator = $scope.list.getIterator(index);
+    analytics.itemViewedIn($scope.iterator.current, analytics.views.popup);
     $scope.iterator.current.markAsRead();
     $scope.view = $scope.views.item;
   };
   
   $scope.openInChrome = function (item) {
+    analytics.itemViewedIn(item, analytics.views.tab);
     item.markAsRead();
     $scope.openUrl(item.url, true);
   };
@@ -49,11 +51,13 @@ function PopupCtrl($scope, reader, options) {
   
   $scope.showNextItem = function () {
     $scope.iterator.moveNext();     
+    analytics.itemViewedIn($scope.iterator.current, analytics.views.popup);
     $scope.iterator.current.markAsRead();
   };
   
   $scope.showPreviousItem = function () {
-    $scope.iterator.movePrevious(); 
+    $scope.iterator.movePrevious();
+    analytics.itemViewedIn($scope.iterator.current, analytics.views.popup);
     $scope.iterator.current.markAsRead();
   };
   
@@ -75,7 +79,6 @@ function PopupCtrl($scope, reader, options) {
   
   $scope.showList = function (list) {
     $scope.currentList = list;
-    console.log('setting list: ' + $scope.currentList);
     options.set({ defaultList: $scope.currentList });
     $scope.refresh();
   };
@@ -85,45 +88,23 @@ function PopupCtrl($scope, reader, options) {
     return true;
   };
   
-  $scope.getContent = function () {
-    var item = $scope.getItem();
-    if (item.content) {
-      return item.content.content;
-    } else if (item.summary) {
-      return item.summary.content;
-    }
-    
-    return '';
-  };
-  
   $scope.rate = function (item) {
     if (item.starred) {
       item.unStar();
     } else {
       item.star()
     }
-  }
-  
-  $scope.$watch('error', function (value) {
-    console.log('error', value);
-  });
+  };
   
   // update unreadcount when popup opens
   chrome.extension.sendMessage({ method: "updateUnreadCount" });
   
   // refresh the list
   options.get(function (values) {
-    console.log('options:', values);
-    switch (values.defaultList) {
-      
-      case $scope.lists.unread: 
-        $scope.currentList = $scope.lists.unread;
-        break;
-      case $scope.lists.all:
-      default: 
-        $scope.currentList = $scope.lists.all;
-    }
-    
+    var defaultList = values.defaultList;
+    if (defaultList && $scope.lists[defaultList]) {
+      $scope.currentList = defaultList;
+    }    
     $scope.refresh();
   });
   

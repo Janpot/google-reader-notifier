@@ -120,13 +120,10 @@ body {
     .box-flex(1);
     overflow:auto;
     
+    
+    
     .grn-loading {
       padding: 15px 0px;
-      text-align: center;
-    }
-    
-    .grn-message {
-      padding: 25px 0px;
       text-align: center;
     }
   
@@ -154,7 +151,7 @@ body {
         .grn-click-target {
           position: absolute;
           top: 0px; bottom: 0px;
-          left: 20px; right: 0px;
+          left: 23px; right: 0px;
           
           cursor: pointer;
           padding-top: 5px;
@@ -224,10 +221,6 @@ body {
             }
           }
           
-          /*.grn-item-origin {
-            left: 0px;
-          }*/
-          
           &:hover {
             background-color: darken(@item-bg-color-read, 2%);
           }
@@ -237,64 +230,14 @@ body {
           }
         }
         
-        
-        /*background-color: @item-bg-color;
-        @divider-color: darken(@item-bg-color, 15%);
-        .lines-between(1px solid @divider-color);        
-        overflow: hidden;
-        
-        .grn-star {
-          margin: 0px 3px;
-        }
-        
-        &:hover {
-          background-color: darken(@item-bg-color, 3%);
-        }
-        
-        .grn-title {
-          font-weight: bold;
-        }
-        
-        &.read {
-          background-color: @item-bg-color-read;
-          @divider-color: darken(@item-bg-color-read, 10%);
-          
-          &:hover {
-            background-color: darken(@item-bg-color-read, 1%);
-          }
-          
-          .grn-title {
-            font-weight: normal;
-          }
-        }
-        
-        .grn-item-description {
-          
-          @column-separator: 230px;          
-          cursor: pointer;
-          
-          .grn-column-origin {
-            .column(22px, @column-separator);
-            
-            .no-wrap();            
-            color: @item-origin-color;
-          }
-          
-          .grn-column-title {
-            .column(@column-separator);
-            
-            .no-wrap();
-            color: @item-snippet-color;
-            
-            .grn-title {
-              font-weight: bold;
-              color: @item-title-color;
-            }            
-          }
-        }*/
           
       }
     }
+  }
+  
+  .grn-message {
+    padding: 25px 0px;
+    text-align: center;
   }
 }
 

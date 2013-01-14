@@ -33,6 +33,9 @@ I'm happy to accept bug fixes. I can't promise to accept new features.
 
 ##version history
 
+###Unreleased:
+  * Scroll per item in the list.
+
 ###2.1.5: Very old bugs
   * Fix unread count to 0 when last item is read in Google Reader.
   * Bug fix for items without a url.

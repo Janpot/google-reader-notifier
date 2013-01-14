@@ -90,6 +90,10 @@ angular.module('Reader.directives', [])
           
           for (var i = 0; i < items.length; i++) {
             var item = items.item(i);
+            if (item.style.display === 'none') {
+              continue;
+            }
+            
             var itemTop = item.offsetTop - parentOffsetTop;
             
             var viewportTop = itemTop - scrollTop;
@@ -99,7 +103,7 @@ angular.module('Reader.directives', [])
             
           }
           // get the next item
-          nextIndex = Math.max(Math.min(firstVisibleItemIdx - n, items.length), 0);
+          nextIndex = Math.max(Math.min(firstVisibleItemIdx - n, items.length - 1), 0);
           var topElement = items.item(nextIndex);
           // scroll to position
           element[0].scrollTop = topElement.offsetTop - parentOffsetTop;

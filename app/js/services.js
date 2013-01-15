@@ -129,14 +129,18 @@ services.factory('reader', function ($rootScope, $http, $q) {
     var oldValue = this.read;
     this.read = true;
     self = this;
-    addTag(this.id, 'user/-/state/com.google/read').then(function onSuccess() {
+    editTag({
+      i: this.id,
+      a: 'user/-/state/com.google/read',
+      r: 'user/-/state/com.google/kept-unread'
+    }).then(function onSuccess() {
       chrome.extension.sendMessage({ method: "updateUnreadCount" });
     }, function onError() {
       self.read = oldValue;
     });
   };
   
-  Item.prototype.markUnread = function () {
+  /*Item.prototype.keepUnread = function () {
     self = this;
     editTag({
       i: this.id,
@@ -146,7 +150,7 @@ services.factory('reader', function ($rootScope, $http, $q) {
       self.read = false;
       chrome.extension.sendMessage({ method: "updateUnreadCount" });
     });
-  };
+  };*/
   
   Item.prototype.star = function () {
     var oldValue = this.starred;
@@ -242,13 +246,19 @@ services.factory('reader', function ($rootScope, $http, $q) {
     this.tail = null;
   };
   
-  List.prototype.asArray = function (item) {
-    var result = [];
+  List.prototype.forEach = function (fn) {
     var iterator = this.head;
     while (iterator) {
-      result.push(iterator);
+      fn(iterator);
       iterator = iterator.next;
     }
+  };
+  
+  List.prototype.asArray = function (item) {
+    var result = [];
+    this.forEach(function (item) {
+      result.push(item);
+    });
     return result;
   };
   
@@ -267,7 +277,7 @@ services.factory('reader', function ($rootScope, $http, $q) {
     var self = this;
     var markAllAsReadLocal = function () {
       chrome.extension.sendMessage({ method: "updateUnreadCount" });
-      self.items.forEach(function (item) {
+      self.forEach(function (item) {
         item.read = true;
       });
     };

@@ -98,6 +98,7 @@ function PopupCtrl($scope, $filter, reader, options) {
     $scope.error = null;
     $scope.reader.list.loadItems(20, true).then(null, function onError (error) {
       $scope.error = error;
+      chrome.extension.sendMessage({ method: "updateUnreadCount" });
     });
   };
   

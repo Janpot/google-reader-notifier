@@ -94,6 +94,21 @@
   width: @right - @left;
 }
 
+@-webkit-keyframes rotating {
+  from{
+    -webkit-transform: rotate(0deg);
+  }
+  to{
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+/* spinning icons */
+i.rotating {
+  display: inline-block !important;
+  -webkit-animation: rotating 500ms linear infinite;
+}
+
 /* Styles */
   
 body {
@@ -119,8 +134,9 @@ body {
       
       > * {
         margin-right: 10px;
-      }
+      }      
     }
+    
   }
   
   .grn-container {

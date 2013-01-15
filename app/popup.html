@@ -24,7 +24,7 @@
         <a class="pull-right" href="https://www.google.com/reader/">Google Reader™</a>
         <div class="btn-toolbar grn-commands">
           <button class="btn" ng-click="refresh()" ng-disabled="reader.list.loading" title="{{reader.list.refreshTime | date:'shortTime'}}">
-            <i class="icon-repeat"></i>
+            <i class="icon-repeat" ng-class="{rotating: reader.list.loading}"></i>
           </button>
           
           <div class="btn-group">

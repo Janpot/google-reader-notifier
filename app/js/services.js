@@ -78,20 +78,6 @@ services.factory('reader', function ($rootScope, $http, $q) {
     return withToken(doEditTag);    
   };
   
-  var addTag = function (itemId, tag) {
-    return editTag({
-      i: itemId,
-      a: tag
-    });
-  };
-  
-  var removeTag = function (itemId, tag) {
-    return editTag({
-      i: itemId,
-      r: tag
-    });
-  };
-  
   var Item = function (raw) {
   // extract the content
     this.content = '';
@@ -140,23 +126,14 @@ services.factory('reader', function ($rootScope, $http, $q) {
     });
   };
   
-  /*Item.prototype.keepUnread = function () {
-    self = this;
-    editTag({
-      i: this.id,
-      a: 'user/-/state/com.google/fresh',
-      r: 'user/-/state/com.google/read'
-    }).then(function () {
-      self.read = false;
-      chrome.extension.sendMessage({ method: "updateUnreadCount" });
-    });
-  };*/
-  
   Item.prototype.star = function () {
     var oldValue = this.starred;
     this.starred = true;
     self = this;
-    addTag(this.id, 'user/-/state/com.google/starred').then(null, function onError() {
+    editTag({
+      i: this.id,
+      a: 'user/-/state/com.google/starred'
+    }).then(null, function onError() {
       self.starred = oldValue;
     });
   };
@@ -165,7 +142,10 @@ services.factory('reader', function ($rootScope, $http, $q) {
     var oldValue = this.starred;
     this.starred = false;
     self = this;
-    removeTag(this.id, 'user/-/state/com.google/starred').then(null, function onError() {
+    editTag({
+      i: this.id,
+      r: 'user/-/state/com.google/starred'
+    }).then(null, function onError() {
       self.starred = oldValue;
     });
   };
@@ -174,7 +154,7 @@ services.factory('reader', function ($rootScope, $http, $q) {
     return this.origin.title + ': ' + this.title;
   };
   
-  var List = function (url, n, params) {
+  var List = function (url, params) {
     this.url = url;
     this.params = params || {};
     this.continuation;
@@ -241,7 +221,7 @@ services.factory('reader', function ($rootScope, $http, $q) {
     }
   };
   
-  List.prototype.clear = function (item) {
+  List.prototype.clear = function () {
     this.head = null;
     this.tail = null;
   };
@@ -254,7 +234,7 @@ services.factory('reader', function ($rootScope, $http, $q) {
     }
   };
   
-  List.prototype.asArray = function (item) {
+  List.prototype.asArray = function () {
     var result = [];
     this.forEach(function (item) {
       result.push(item);
@@ -262,7 +242,7 @@ services.factory('reader', function ($rootScope, $http, $q) {
     return result;
   };
   
-  List.prototype.markAllAsRead = function (n) {
+  List.prototype.markAllAsRead = function () {
     var markAllAsReadUrl = 'https://www.google.com/reader/api/0/mark-all-as-read';
     
     var doMarkAllAsRead = function (token) {
@@ -285,24 +265,24 @@ services.factory('reader', function ($rootScope, $http, $q) {
     withToken(doMarkAllAsRead).then(markAllAsReadLocal);
   };
   
-  List.prototype.canLoadMore = function (n) {
+  List.prototype.canLoadMore = function () {
     return this.continuation || this.loading;
   };
   
   
   return {
     getReadingList: function (n) {
-      return new List('https://www.google.com/reader/api/0/stream/contents/user/-/state/com.google/reading-list', n);
+      return new List('https://www.google.com/reader/api/0/stream/contents/user/-/state/com.google/reading-list');
     },
     
     getUnreadList: function (n) {
-      return new List('https://www.google.com/reader/api/0/stream/contents/user/-/state/com.google/reading-list', n, {
+      return new List('https://www.google.com/reader/api/0/stream/contents/user/-/state/com.google/reading-list', {
         xt: 'user/-/state/com.google/read'
       });
     },
     
     getStarredList: function (n) {
-      return new List('https://www.google.com/reader/api/0/stream/contents/user/-/state/com.google/starred', n);
+      return new List('https://www.google.com/reader/api/0/stream/contents/user/-/state/com.google/starred');
     }
   };
 });

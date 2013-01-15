@@ -101,8 +101,6 @@ body {
   margin: 0px;
   font-family: Arial, sans-serif;
   font-size: 13px;
-  
-  
 }
 
 #list-view {
@@ -267,37 +265,25 @@ body {
   max-height: 600px;
   
   header {
-    .box(horizontal);
     
     border-bottom: 1px solid #DDD;
     position: relative;
     
-    .grn-star {
-      margin: 7px 5px 0px 5px;
-    }
-    
     .grn-navigation {
       background-color: white;
       float: right;
-      position: fixed;
-      right: 0px; top: 0px;
       margin: 5px;
-      opacity: 0;
-      -webkit-transition: opacity 100ms;
-      -webkit-transition-delay: 300ms;
     }
     
-    &:hover .grn-navigation {
-      display: block;
-      opacity: 1;
-      -webkit-transition-delay: 0ms;
-    }
-    
-    .grn-info {
-      .box-flex(1);      
+    .grn-info { 
       
       max-height: 150px;
       overflow: auto;
+      padding: 3px 4px 6px 4px;
+      
+      .grn-star {
+        margin-bottom: 5px;
+      }
       
       > p {
         margin: 0px;

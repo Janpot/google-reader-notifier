@@ -99,11 +99,11 @@
             <i class="icon-chevron-right"></i>
           </button>      
         </div>
-        <span class="grn-star" ng-class="{'grn-starred': currentItem.starred}" ng-click="rate(currentItem)"></span>
         <div class="grn-info"> 
           <p>
+            <span class="grn-star" ng-class="{'grn-starred': currentItem.starred}" ng-click="rate(currentItem)"></span>
             <a href="{{currentItem.url}}" class="grn-title" title="{{currentItem.title}}">
-              {{currentItem.title}}
+              {{currentItem.title}} 
             </a>
           </p>
           <p>

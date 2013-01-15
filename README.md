@@ -33,8 +33,8 @@ I'm happy to accept bug fixes. I can't promise to accept new features.
 
 ##version history
 
-###2.1.10: Titles
-  * Fix issue with untitled items.
+###2.1.10 - 2.1.11: Defense mode
+  * Be more defensive against received data.
 
 ###2.1.9: Keep unread
   * Support 'Keep unread'.

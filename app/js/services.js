@@ -27,9 +27,9 @@ services.factory('reader', function ($rootScope, $http, $q) {
   };
   
   var hasCategory = function (raw, categoryMatcher) {
-    return raw.categories.some(function matches(category) {
+    return raw.categories ? raw.categories.some(function matches(category) {
       return categoryMatcher.test(category);
-    });
+    }) : false;
   }
   
   // provides a token to a function, retries once on fail
@@ -94,16 +94,18 @@ services.factory('reader', function ($rootScope, $http, $q) {
     this.snippet = tmp.textContent;
     
     // create a viewmodel
-    this.title = normalize(raw.title);
+    this.title = raw.title ? normalize(raw.title) : '(title unknown)';    
     
     this.url = ''
     if (raw.alternate && raw.alternate[0] && raw.alternate[0].href) {
       this.url = raw.alternate[0].href;
     }
-    this.origin = {
-      title: normalize(raw.origin.title),
+    
+    this.origin = raw.origin ? {
+      title: raw.origin.title ? normalize(raw.origin.title) : undefined,
       url: raw.origin.htmlUrl
-    };
+    } : undefined;
+    
     this.read = hasCategory(raw, /^user\/[-\d]+\/state\/com\.google\/read$/);
     this.starred = hasCategory(raw, /^user\/[-\d]+\/state\/com\.google\/starred$/);
     this.id = raw.id;

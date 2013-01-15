@@ -159,10 +159,10 @@ services.factory('reader', function ($rootScope, $http, $q) {
     this.params = params || {};
     this.continuation;
     this.loading = false;
+    this.refreshTime = null;
     
     this.head = null;
     this.tail = null;
-    this.clear();
   };
   
   List.prototype.loadItems = function (n, refresh) {
@@ -176,6 +176,7 @@ services.factory('reader', function ($rootScope, $http, $q) {
     if (refresh) {
       this.clear();
       delete this.params.c;
+      this.refreshTime = Date.now();
     } else {
       this.params.c = this.continuation;
     }

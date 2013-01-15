@@ -64,6 +64,7 @@ function PopupCtrl($scope, $filter, reader, options) {
     analytics.itemViewedIn(item, analytics.views.tab);
     item.markAsRead();
     $scope.openUrl(item.url, true);
+    return false;
   };
   
   $scope.showListView = function () {

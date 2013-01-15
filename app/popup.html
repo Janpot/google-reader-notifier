@@ -23,7 +23,7 @@
       <header>
         <a class="pull-right" href="https://www.google.com/reader/">Google Reader™</a>
         <div class="btn-toolbar commands">
-          <button class="btn" ng-click="refresh()" ng-disabled="reader.list.loading">
+          <button class="btn" ng-click="refresh()" ng-disabled="reader.list.loading" title="{{reader.list.refreshTime | date:'shortTime'}}">
             <i class="icon-repeat"></i>
           </button>
           
@@ -59,10 +59,10 @@
             <span class="grn-star" ng-class="{'grn-starred': item.starred}" ng-click="rate(item)"></span>
             <div class="grn-click-target" ng-click="showItemView(item)">
               <span class="grn-item-content" title="{{item.title}}">
-                <a class="grn-item-title" middle-click="openInChrome(item);$event.stopPropagation();">{{item.title}}</a>
+                <a class="grn-item-title" middle-click="openInChrome(item)">{{item.title}}</a>
                 {{item.snippet}}
               </span>
-              <span class="grn-item-origin" middle-click="openUrl(item.origin.url, true);$event.stopPropagation();">
+              <span class="grn-item-origin" middle-click="openUrl(item.origin.url, true)">
                 by <a title="{{item.origin.title}}">{{item.origin.title}}</a>
               </span>
               <ul class="grn-item-commands">
@@ -107,7 +107,7 @@
             </a>
           </p>
           <p>
-            <span class="grn-time">{{currentItem.time | date:'MMM d, h:mm a'}}</span> by 
+            <span class="grn-time">{{currentItem.time | date:'short'}}</span> by 
             <a href="{{currentItem.origin.url}}" class="grn-origin" title="{{currentItem.origin.title}}">
               {{currentItem.origin.title}}
             </a>

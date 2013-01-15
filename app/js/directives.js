@@ -6,7 +6,6 @@ angular.module('Reader.directives', [])
       var canLoadMore = $parse(attr.canLoadMore);
       
       elm.bind('scroll', function() {
-        console.log('firing', canLoadMore(scope));
         if (!canLoadMore(scope)) {
           return;
         }
@@ -66,8 +65,9 @@ angular.module('Reader.directives', [])
           var clickedMiddle = (event.button === 1) || (event.button === 0 && event.ctrlKey);
           if (clickedMiddle) {
             scope.$apply(function() {
-              fn(scope, {$event: event});
-            }); 
+              return fn(scope, {$event: event});
+            });
+            event.stopPropagation();
           }
         });
       }

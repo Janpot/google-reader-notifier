@@ -56,13 +56,17 @@ function PopupCtrl($scope, $filter, reader, options) {
   $scope.showItemView = function (item) {
     $scope.currentItem = item;
     analytics.itemViewedIn($scope.currentItem, analytics.views.popup);
-    $scope.currentItem.markAsRead();
+    if (!$scope.currentItem.keptUnread) {
+      $scope.currentItem.markAsRead();
+    }
     $scope.view = $scope.views.item;
   };
   
   $scope.openInChrome = function (item) {
     analytics.itemViewedIn(item, analytics.views.tab);
-    item.markAsRead();
+    if (!$scope.currentItem.keptUnread) {
+      item.markAsRead();
+    }
     $scope.openUrl(item.url, true);
     return false;
   };
@@ -74,7 +78,9 @@ function PopupCtrl($scope, $filter, reader, options) {
   $scope.showNextItem = function () {
     $scope.currentItem = $scope.currentItem.next;
     analytics.itemViewedIn($scope.currentItem, analytics.views.popup);
-    $scope.currentItem.markAsRead();
+    if (!$scope.currentItem.keptUnread) {
+      $scope.currentItem.markAsRead();
+    }
     if (!$scope.currentItem.next && $scope.reader.list.canLoadMore()) {
       $scope.reader.list.loadItems(10);
     }
@@ -83,7 +89,9 @@ function PopupCtrl($scope, $filter, reader, options) {
   $scope.showPreviousItem = function () {
     $scope.currentItem = $scope.currentItem.previous;
     analytics.itemViewedIn($scope.currentItem, analytics.views.popup);
-    $scope.currentItem.markAsRead();
+    if (!$scope.currentItem.keptUnread) {
+      $scope.currentItem.markAsRead();
+    }
   };
   
   $scope.refresh = function () {  

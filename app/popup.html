@@ -22,7 +22,7 @@
     <div id="list-view" ng-show="view == views.list">
       <header>
         <a class="pull-right" href="https://www.google.com/reader/">Google Reader™</a>
-        <div class="btn-toolbar commands">
+        <div class="btn-toolbar grn-commands">
           <button class="btn" ng-click="refresh()" ng-disabled="reader.list.loading" title="{{reader.list.refreshTime | date:'shortTime'}}">
             <i class="icon-repeat"></i>
           </button>
@@ -111,6 +111,10 @@
             <a href="{{currentItem.origin.url}}" class="grn-origin" title="{{currentItem.origin.title}}">
               {{currentItem.origin.title}}
             </a>
+          </p>
+          <p class="grn-commands">
+            <a ng-show="currentItem.read && !currentItem.readStateLocked" ng-click="currentItem.keepUnread()">Keep unread</a>
+            <a ng-show="!currentItem.read" ng-click="currentItem.markAsRead()">Mark as read</a>
           </p>
         </div>
       </header>

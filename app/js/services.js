@@ -109,6 +109,9 @@ services.factory('reader', function ($rootScope, $http, $q) {
     if (raw.published) {
       this.time = new Date(raw.published * 1000);
     }
+    
+    this.keptUnread = hasCategory(raw, /^user\/[-\d]+\/state\/com\.google\/kept-unread$/);
+    this.readStateLocked = raw.isReadStateLocked || false;
   };
   
   Item.prototype.markAsRead = function () {
@@ -123,6 +126,24 @@ services.factory('reader', function ($rootScope, $http, $q) {
       chrome.extension.sendMessage({ method: "updateUnreadCount" });
     }, function onError() {
       self.read = oldValue;
+    });
+  };
+  
+  Item.prototype.keepUnread = function () {
+    var readOld = this.read;
+    var keptUnreadOld = this.keptUnread;
+    this.read = false;
+    this.keptUnread = true;
+    self = this;
+    editTag({
+      i: this.id,
+      a: 'user/-/state/com.google/kept-unread',
+      r: 'user/-/state/com.google/read'
+    }).then(function onSuccess() {
+      chrome.extension.sendMessage({ method: "updateUnreadCount" });
+    }, function onError() {
+      self.read = readOld;
+      self.keptUnread = keptUnreadOld;
     });
   };
   
@@ -261,6 +282,8 @@ services.factory('reader', function ($rootScope, $http, $q) {
       chrome.extension.sendMessage({ method: "updateUnreadCount" });
       self.forEach(function (item) {
         item.read = true;
+        item.keptUnread = false;
+        item.readStateLocked = true;
       });
     };
     

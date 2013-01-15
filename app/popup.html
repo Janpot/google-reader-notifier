@@ -52,7 +52,7 @@
 
       </header>
       
-      <div class="grn-container ng-cloak" when-scrolled="loadMoreItems()" scroll-nice=".scroll-item">
+      <div class="grn-container ng-cloak" on-load-more="loadMoreItems()" can-load-more="reader.list.canLoadMore()" scroll-nice=".scroll-item">
         
         <ul class="grn-items-list">          
           <li class="grn-list-item scroll-item" ng-class="{read: item.read}" ng-repeat="item in filterItems()">

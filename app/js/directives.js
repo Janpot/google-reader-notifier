@@ -1,16 +1,17 @@
 angular.module('Reader.directives', [])
   
-  .directive('whenScrolled', function() {
+  .directive('onLoadMore', function($parse) {
     return function(scope, elm, attr) {
       var raw = elm[0];
-      var hasMoreElements = true;
+      var canLoadMore = $parse(attr.canLoadMore);
       
       elm.bind('scroll', function() {
-        if (!hasMoreElements) {
+        console.log('firing', canLoadMore(scope));
+        if (!canLoadMore(scope)) {
           return;
         }
         if (raw.scrollTop + raw.offsetHeight + 200 >= raw.scrollHeight) {
-          hasMoreElements = scope.$apply(attr.whenScrolled);
+          scope.$apply(attr.onLoadMore);
         }
       });
     };
@@ -73,7 +74,7 @@ angular.module('Reader.directives', [])
     };
   })
   
- .directive('scrollNice', function($parse) {
+ .directive('scrollNice', function() {
     
     return {
       restrict: 'A',

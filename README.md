@@ -33,6 +33,12 @@ I'm happy to accept bug fixes. I can't promise to accept new features.
 
 ##version history
 
+###2.1.9: Keep unread
+  * Support 'Keep unread'.
+  * Fix bug when switching lists where old items were shown.
+  * Clean up the UI.
+  * Respect Google Reader API more with editing tags.
+
 ###2.1.8: Reach for the stars
   * Support starred list
   * expand toolbar

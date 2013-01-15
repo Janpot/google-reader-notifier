@@ -89,33 +89,33 @@
     <div id="item-view" ng-show="view == views.item" class="ng-cloak">
       <header>
         <div class="grn-navigation btn-group">
-          <button class="btn" ng-click="showPreviousItem()" ng-disabled="!iterator.hasPrevious()" title="{{iterator.previousDescr}}">
+          <button class="btn" ng-click="showPreviousItem()" ng-disabled="!currentItem.previous" title="{{currentItem.previous.getSummary()}}">
             <i class="icon-chevron-left"></i>
           </button>
           <button class="btn" ng-click="showListView()" title="list">
             <i class="icon-align-justify"></i>
           </button>          
-          <button class="btn" ng-click="showNextItem()" ng-disabled="!iterator.hasNext()" title="{{iterator.nextDescr}}">
+          <button class="btn" ng-click="showNextItem()" ng-disabled="!currentItem.next" title="{{currentItem.next.getSummary()}}">
             <i class="icon-chevron-right"></i>
           </button>      
         </div>
-        <span class="grn-star" ng-class="{'grn-starred': iterator.current.starred}" ng-click="rate(iterator.current)"></span>
+        <span class="grn-star" ng-class="{'grn-starred': currentItem.starred}" ng-click="rate(currentItem)"></span>
         <div class="grn-info"> 
           <p>
-            <a href="{{iterator.current.url}}" class="grn-title" title="{{iterator.current.title}}">
-              {{iterator.current.title}}
+            <a href="{{currentItem.url}}" class="grn-title" title="{{currentItem.title}}">
+              {{currentItem.title}}
             </a>
           </p>
           <p>
-            <span class="grn-time">{{iterator.current.time | date:'MMM d, h:mm a'}}</span> by 
-            <a href="{{iterator.current.origin.url}}" class="grn-origin" title="{{iterator.current.origin.title}}">
-              {{iterator.current.origin.title}}
+            <span class="grn-time">{{currentItem.time | date:'MMM d, h:mm a'}}</span> by 
+            <a href="{{currentItem.origin.url}}" class="grn-origin" title="{{currentItem.origin.title}}">
+              {{currentItem.origin.title}}
             </a>
           </p>
         </div>
       </header>
       <div class="grn-container">
-        <div class="grn-content" bind-compile-html="iterator.current.content"></div>
+        <div class="grn-content" bind-compile-html="currentItem.content"></div>
       </div>
     </div>
   

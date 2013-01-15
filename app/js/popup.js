@@ -52,13 +52,12 @@ function PopupCtrl($scope, $filter, reader, options) {
   $scope.view = $scope.views.list;
   $scope.iterator = {};
   $scope.reader = $scope.readers.all;
+  $scope.currentItem;
   
   $scope.showItemView = function (item) {
-    var index = $scope.reader.list.items.indexOf(item);
-    $scope.iterator = $scope.reader.list.getIterator(index);
-    
-    analytics.itemViewedIn($scope.iterator.current, analytics.views.popup);
-    $scope.iterator.current.markAsRead();
+    $scope.currentItem = item;
+    analytics.itemViewedIn($scope.currentItem, analytics.views.popup);
+    $scope.currentItem.markAsRead();
     $scope.view = $scope.views.item;
   };
   
@@ -73,15 +72,15 @@ function PopupCtrl($scope, $filter, reader, options) {
   };
   
   $scope.showNextItem = function () {
-    $scope.iterator.moveNext();     
-    analytics.itemViewedIn($scope.iterator.current, analytics.views.popup);
-    $scope.iterator.current.markAsRead();
+    $scope.currentItem = $scope.currentItem.next;
+    analytics.itemViewedIn($scope.currentItem, analytics.views.popup);
+    $scope.currentItem.markAsRead();
   };
   
   $scope.showPreviousItem = function () {
-    $scope.iterator.movePrevious();
-    analytics.itemViewedIn($scope.iterator.current, analytics.views.popup);
-    $scope.iterator.current.markAsRead();
+    $scope.currentItem = $scope.currentItem.previous;
+    analytics.itemViewedIn($scope.currentItem, analytics.views.popup);
+    $scope.currentItem.markAsRead();
   };
   
   $scope.refresh = function () {  
@@ -93,7 +92,7 @@ function PopupCtrl($scope, $filter, reader, options) {
   
   var filter = $filter('filter');
   $scope.filterItems = function() {
-    return filter($scope.reader.list.items, $scope.reader.filter);
+    return filter($scope.reader.list.asArray(), $scope.reader.filter);
   }
   
   $scope.showList = function (list) {

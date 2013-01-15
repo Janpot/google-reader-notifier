@@ -166,13 +166,19 @@ services.factory('reader', function ($rootScope, $http, $q) {
     });
   };
   
+  Item.prototype.getSummary = function () {
+    return this.origin.title + ': ' + this.title;
+  };
+  
   var List = function (url, n, params) {
     this.url = url;
-    this.params = params || {};    
-    this.items = [];
+    this.params = params || {};
     this.continuation;
     this.loading = false;
-    this.empty = false;
+    
+    this.head = null;
+    this.tail = null;
+    this.clear();
   };
   
   List.prototype.loadItems = function (n, refresh) {
@@ -184,7 +190,7 @@ services.factory('reader', function ($rootScope, $http, $q) {
     this.params.n = n || 1;
     
     if (refresh) {
-      this.items = [];
+      this.clear();
     } else {
       this.params.c = this.continuation;
     }
@@ -196,9 +202,8 @@ services.factory('reader', function ($rootScope, $http, $q) {
         params: this.params
       }).success(function onSuccess(data) {
         console.log(data);
-        self.empty = data.items.length === 0;
         data.items.forEach(function addToList(raw) {
-          self.items.push(new Item(raw));
+          self.push(new Item(raw));
         });
         self.continuation = data.continuation;
         self.loading = false;
@@ -212,6 +217,39 @@ services.factory('reader', function ($rootScope, $http, $q) {
     }
     
     return deferred.promise;
+  };
+  
+  List.prototype.isEmpty = function () {
+    return this.head === null;
+  };
+  
+  List.prototype.push = function (item) {
+    if (this.isEmpty()) {
+      item.previous = null;
+      item.next = null;
+      this.head = item;
+      this.tail = item;
+    } else {
+      item.previous = this.tail;
+      item.next = null;
+      this.tail.next = item;
+      this.tail = item;
+    }
+  };
+  
+  List.prototype.clear = function (item) {
+    this.head = null;
+    this.tail = null;
+  };
+  
+  List.prototype.asArray = function (item) {
+    var result = [];
+    var iterator = this.head;
+    while (iterator) {
+      result.push(iterator);
+      iterator = iterator.next;
+    }
+    return result;
   };
   
   List.prototype.markAllAsRead = function (n) {
@@ -241,53 +279,6 @@ services.factory('reader', function ($rootScope, $http, $q) {
     return this.continuation || this.loading;
   };
   
-  List.prototype.getIterator = function (index) {
-    return new ListIterator(this, index);
-  };
-  
-  var ListIterator = function (list, index) {
-    this.list = list;
-    this.index;
-    this.current;
-    this.previousDescr;
-    this.nextDescr;
-    this.init(index || 0);
-  };
-  
-  ListIterator.prototype.init = function (index) {
-    this.index = index;
-    this.current = this.list.items[this.index];
-    
-    if (this.hasNext()) {
-      var next = this.list.items[this.index + 1];
-      this.nextDescr = next.origin.title + ': ' + next.title;
-    }
-    if (this.hasPrevious()) {
-      var previous = this.list.items[this.index - 1];
-      this.previousDescr = previous.origin.title + ': ' + previous.title;
-    }
-  };
-  
-  ListIterator.prototype.hasNext = function () {
-    return this.index < this.list.items.length - 1;
-  };
-  
-  ListIterator.prototype.hasPrevious = function () {
-    return this.index > 0;
-  };
-  
-  ListIterator.prototype.moveNext = function () {
-    this.init(this.index + 1);
-    // ensure more items in the list
-    var needsMoreItems = (this.index >= this.list.items.length - 5) && !this.list.loading && this.list.canLoadMore();
-    if (needsMoreItems) {
-      this.list.loadItems(10);
-    }
-  };
-  
-  ListIterator.prototype.movePrevious = function () {
-    this.init(this.index - 1);
-  };
   
   return {
     getReadingList: function (n) {

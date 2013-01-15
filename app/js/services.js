@@ -175,6 +175,7 @@ services.factory('reader', function ($rootScope, $http, $q) {
     
     if (refresh) {
       this.clear();
+      delete this.params.c;
     } else {
       this.params.c = this.continuation;
     }

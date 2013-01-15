@@ -50,7 +50,6 @@ function PopupCtrl($scope, $filter, reader, options) {
   
   $scope.error = null;
   $scope.view = $scope.views.list;
-  $scope.iterator = {};
   $scope.reader = $scope.readers.all;
   $scope.currentItem;
   
@@ -75,6 +74,9 @@ function PopupCtrl($scope, $filter, reader, options) {
     $scope.currentItem = $scope.currentItem.next;
     analytics.itemViewedIn($scope.currentItem, analytics.views.popup);
     $scope.currentItem.markAsRead();
+    if (!$scope.currentItem.next && $scope.reader.list.canLoadMore()) {
+      $scope.reader.list.loadItems(10);
+    }
   };
   
   $scope.showPreviousItem = function () {
@@ -110,7 +112,7 @@ function PopupCtrl($scope, $filter, reader, options) {
     if (item.starred) {
       item.unStar();
     } else {
-      item.star()
+      item.star();
     }
   };
   

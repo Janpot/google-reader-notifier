@@ -5,6 +5,7 @@ var services = angular.module('Reader.services', []);
 services.factory('reader', function ($rootScope, $http, $q) {
   
   var normalize = function (str) {
+    str = str || '';
     var subs = {
       'amp': '&',
       'apos': '\'',
@@ -94,6 +95,7 @@ services.factory('reader', function ($rootScope, $http, $q) {
     
     // create a viewmodel
     this.title = normalize(raw.title);
+    
     this.url = ''
     if (raw.alternate && raw.alternate[0] && raw.alternate[0].href) {
       this.url = raw.alternate[0].href;

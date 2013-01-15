@@ -76,11 +76,26 @@ angular.module('Reader.directives', [])
   
  .directive('scrollNice', function() {
     
+    var getVisibleItems = function (parent, selector) {
+      domItems = parent.querySelectorAll(selector);
+      var result = [];
+      for (var i = 0; i < domItems.length; i++) {
+        var element = domItems.item(i);
+        var visible = element.style.display !== 'none';
+        
+        if (visible) {
+          result.push(element);
+        }
+      }
+      
+      return result;
+    };
+    
     return {
       restrict: 'A',
       link: function(scope, element, attr) {
         var scrollItems = function (n) {
-          var items = element[0].querySelectorAll(attr.scrollNice);
+          var items = getVisibleItems(element[0], attr.scrollNice);
           
           var scrollTop = element[0].scrollTop;
           var parentOffsetTop = element[0].offsetTop;
@@ -90,10 +105,7 @@ angular.module('Reader.directives', [])
           var firstVisibleItemIdx = 0;
           
           for (var i = 0; i < items.length; i++) {
-            var item = items.item(i);
-            if (item.style.display === 'none') {
-              continue;
-            }
+            var item = items[i];
             
             var itemTop = item.offsetTop - parentOffsetTop;
             
@@ -106,7 +118,7 @@ angular.module('Reader.directives', [])
           }
           // get the next item
           nextIndex = Math.max(Math.min(firstVisibleItemIdx - n, items.length - 1), 0);
-          var topElement = items.item(nextIndex);
+          var topElement = items[nextIndex];
           // scroll to position
           element[0].scrollTop = topElement.offsetTop - parentOffsetTop;
         };

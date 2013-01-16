@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('Reader.popup', ['Reader.services', 'Reader.directives', 'ngSanitize']);
+angular.module('Reader.popup', ['Reader.services', 'Reader.directives', 'Reader.filters', 'ngSanitize']);
   
 function PopupCtrl($scope, $filter, reader, options) {
   

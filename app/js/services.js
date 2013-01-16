@@ -106,6 +106,8 @@ services.factory('reader', function ($rootScope, $http, $q) {
       url: raw.origin.htmlUrl
     } : undefined;
     
+    this.author = raw.author;
+    
     this.read = hasCategory(raw, /^user\/[-\d]+\/state\/com\.google\/read$/);
     this.starred = hasCategory(raw, /^user\/[-\d]+\/state\/com\.google\/starred$/);
     this.id = raw.id;

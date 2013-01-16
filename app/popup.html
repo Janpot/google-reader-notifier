@@ -12,6 +12,7 @@
     <script src="lib/bootstrap/js/bootstrap.js"></script>
     <script src="js/analytics.js"></script>
     <script src="js/options.js"></script>
+    <script src="js/filters.js"></script>
     <script src="js/directives.js"></script>
     <script src="js/services.js"></script>
     <script src="js/popup.js"></script>
@@ -20,6 +21,7 @@
   <body ng-controller="PopupCtrl">
     
     <div id="list-view" ng-show="view == views.list">
+        
       <header>
         <a class="pull-right" href="https://www.google.com/reader/">Google Reader™</a>
         <div class="btn-toolbar grn-commands">
@@ -51,8 +53,8 @@
         </div>
 
       </header>
-      
-      <div class="grn-container ng-cloak" on-load-more="loadMoreItems()" can-load-more="reader.list.canLoadMore()" scroll-nice=".scroll-item">
+        
+      <div ng-hide="error" class="grn-container ng-cloak" on-load-more="loadMoreItems()" can-load-more="reader.list.canLoadMore()" scroll-nice=".scroll-item">
         
         <ul class="grn-items-list">          
           <li class="grn-list-item scroll-item" ng-class="{read: item.read}" ng-repeat="item in filterItems()">
@@ -63,7 +65,7 @@
                 {{item.snippet}}
               </span>
               <span class="grn-item-origin" middle-click="openUrl(item.origin.url, true)">
-                by <a title="{{item.origin.title}}">{{item.origin.title}}</a>
+                from <a title="{{item.origin.title}}">{{item.origin.title}}</a>
               </span>
               <ul class="grn-item-commands">
                 <li><a ng-click="item.markAsRead();$event.stopPropagation();">Mark as read</a></li>
@@ -75,14 +77,14 @@
         <div class="grn-loading scroll-item" ng-show="reader.list.loading">
           <img src="img/loading.gif"/>  
         </div>
+        
+        <div class="grn-message" ng-show="filterItems().length <= 0 && !reader.list.loading">
+          No items in this list. <span ng-show="currentList != readers.all">Show <a ng-click="showList(readers.all)">all items</a> instead?</span>
+        </div>
       </div>
       
-      <div class="grn-message" ng-show="filterItems().length <= 0 && !reader.list.loading">
-        No items in this list. <span ng-show="currentList != readers.all">Show <a ng-click="showList(readers.all)">all items</a> instead?</span>
-      </div>
-      
-      <div class="grn-message" ng-show="error">
-        Error while loading this list, open <a href="https://www.google.com/reader/">Google Reader</a> instead?            
+      <div class="grn-message ng-cloak" ng-show="error">
+        Error while loading this list, refresh or open <a href="https://www.google.com/reader/">Google Reader</a> instead?            
       </div>
     </div>
     
@@ -107,14 +109,15 @@
             </a>
           </p>
           <p>
-            <span class="grn-time">{{currentItem.time | date:'short'}}</span> by 
+            <span class="grn-time">{{currentItem.time | date:'short'}}</span> from 
             <a href="{{currentItem.origin.url}}" class="grn-origin" title="{{currentItem.origin.title}}">
               {{currentItem.origin.title}}
             </a>
+            <span ng-show="currentItem.author"> by {{currentItem.author}}</span>
           </p>
           <p class="grn-commands">
             <a ng-show="!currentItem.readStateLocked" ng-click="toggleKeepUnread(currentItem)">
-              <i ng-class="{true: 'icon-check', false: 'icon-check-empty'}[currentItem.keptUnread]"></i> Keep unread
+              <i ng-class="currentItem.keptUnread | conditional:'icon-check':'icon-check-empty'"></i> Keep unread
             </a>
           </p>
         </div>

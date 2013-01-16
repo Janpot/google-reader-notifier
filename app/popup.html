@@ -113,8 +113,9 @@
             </a>
           </p>
           <p class="grn-commands">
-            <a ng-show="currentItem.read && !currentItem.readStateLocked" ng-click="currentItem.keepUnread()">Keep unread</a>
-            <a ng-show="!currentItem.read" ng-click="currentItem.markAsRead()">Mark as read</a>
+            <a ng-show="!currentItem.readStateLocked" ng-click="toggleKeepUnread(currentItem)">
+              <i ng-class="{true: 'icon-check', false: 'icon-check-empty'}[currentItem.keptUnread]"></i> Keep unread
+            </a>
           </p>
         </div>
       </header>

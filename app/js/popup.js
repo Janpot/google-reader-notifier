@@ -126,6 +126,16 @@ function PopupCtrl($scope, $filter, reader, options) {
     }
   };
   
+  $scope.toggleKeepUnread = function (item) {
+    if (item.keptUnread) {
+      item.markAsRead();
+    } else {
+      item.keepUnread();
+    }
+  };
+  
+  
+  
   // update unreadcount when popup opens
   chrome.extension.sendMessage({ method: "updateUnreadCount" });
   

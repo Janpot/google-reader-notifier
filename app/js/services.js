@@ -119,8 +119,10 @@ services.factory('reader', function ($rootScope, $http, $q) {
   };
   
   Item.prototype.markAsRead = function () {
-    var oldValue = this.read;
+    var readOld = this.read;
+    var keptUnreadOld = this.keptUnread;
     this.read = true;
+    this.keptUnread = false;
     self = this;
     editTag({
       i: this.id,
@@ -129,7 +131,8 @@ services.factory('reader', function ($rootScope, $http, $q) {
     }).then(function onSuccess() {
       chrome.extension.sendMessage({ method: "updateUnreadCount" });
     }, function onError() {
-      self.read = oldValue;
+      self.read = readOld;
+      self.keptUnread = keptUnreadOld;
     });
   };
   

@@ -64,7 +64,7 @@ function PopupCtrl($scope, $filter, reader, options) {
   
   $scope.openInChrome = function (item) {
     analytics.itemViewedIn(item, analytics.views.tab);
-    if (!$scope.currentItem.keptUnread) {
+    if (!item.keptUnread) {
       item.markAsRead();
     }
     $scope.openUrl(item.url, true);

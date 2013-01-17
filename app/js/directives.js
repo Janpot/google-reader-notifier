@@ -1,5 +1,34 @@
 angular.module('Reader.directives', [])
   
+  .directive('readerlist', function($parse) {
+    return {
+      restrict: 'E',
+      replace: true,
+      transclude: 'element',
+      scope: true,
+      template: [
+        '<div class="grn-container">',
+          '<ul class="grn-items-list">',
+            '<li class="grn-list-item scroll-item" ng-repeat="item in items" ng-transclude></li>',
+            '<li class="grn-loading scroll-item">',
+              '<img src="img/loading.gif"/>', 
+            '</li>',
+          '</ul>',
+        '</div>' 
+      ].join(''),
+      link: function(scope, elm, attr) {
+        var match = attr.repeat.match(/^\s*(.+)\s+in\s+(.*)\s*$/);
+        
+        var lhs = match[1];
+        var rhs = match[2];
+        scope.item = {};
+        scope.$watch(rhs, function (value) {
+          scope.items = value;
+        });
+      }
+    };
+  })
+  
   .directive('onLoadMore', function($parse) {
     return function(scope, elm, attr) {
       var raw = elm[0];

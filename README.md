@@ -1,7 +1,8 @@
-#Notifier for Google Reader
+#[Notifier for Google Reader](https://chrome.google.com/webstore/detail/notifier-for-google-reade/kfimchjilnmjmjpdgedcamjninpdkkpk)
 
 
 Google Chrome extension that checks Google Reader and shows the unread items count. Quickly go through your feeds with the popup.
+
 
 Supports: 
 

@@ -19,16 +19,16 @@
   </head>
 
   <body ng-controller="PopupCtrl">
-    
+
     <div id="list-view" ng-show="view == views.list">
-        
+
       <header>
         <a class="pull-right" href="https://www.google.com/reader/">Google Reader™</a>
         <div class="btn-toolbar grn-commands">
           <button class="btn" ng-click="refresh()" ng-disabled="reader.list.loading" title="{{reader.list.refreshTime | date:'shortTime'}}">
             <i class="icon-repeat" ng-class="{rotating: reader.list.loading}"></i>
           </button>
-          
+
           <div class="btn-group">
             <button class="btn" ng-click="showList(reader == readers.all && readers.unread || readers.all)">
               <span ng-show="reader != readers.all"><i class="icon-home"></i> All items</span>
@@ -46,17 +46,17 @@
               </li>
             </ul>
           </div>
-          
+
           <button class="btn" ng-click="reader.list.markAllAsRead()">
             <i class="icon-ok"></i> Mark all as read
           </button>
         </div>
 
       </header>
-        
+
       <div ng-hide="error" class="grn-container ng-cloak" on-load-more="loadMoreItems()" can-load-more="reader.list.canLoadMore()" scroll-nice=".scroll-item">
-        
-        <ul class="grn-items-list">          
+
+        <ul class="grn-items-list">
           <li class="grn-list-item scroll-item" ng-class="{read: item.read}" ng-repeat="item in filterItems()">
             <span class="grn-star" ng-class="{'grn-starred': item.starred}" ng-click="rate(item)"></span>
             <div class="grn-click-target" ng-click="showItemView(item)">
@@ -71,23 +71,23 @@
                 <li><a ng-click="item.markAsRead();$event.stopPropagation();">Mark as read</a></li>
               </ul>
             </div>
-          </li>          
+          </li>
         </ul>
-        
+
         <div class="grn-loading scroll-item" ng-show="reader.list.loading">
-          <img src="img/loading.gif"/>  
+          <img src="img/loading.gif"/>
         </div>
-        
+
         <div class="grn-message" ng-show="filterItems().length <= 0 && !reader.list.loading">
           No items in this list. <span ng-show="currentList != readers.all">Show <a ng-click="showList(readers.all)">all items</a> instead?</span>
         </div>
       </div>
-      
+
       <div class="grn-message ng-cloak" ng-show="error">
-        Error while loading this list, refresh or open <a href="https://www.google.com/reader/">Google Reader</a> instead?            
+        Error while loading this list, refresh or open <a href="https://www.google.com/reader/">Google Reader</a> instead?
       </div>
     </div>
-    
+
     <div id="item-view" ng-show="view == views.item" class="ng-cloak">
       <header>
         <div class="grn-navigation btn-group">
@@ -96,20 +96,20 @@
           </button>
           <button class="btn" ng-click="showListView()" title="list">
             <i class="icon-align-justify"></i>
-          </button>          
+          </button>
           <button class="btn" ng-click="showNextItem()" ng-disabled="!currentItem.next" title="{{currentItem.next.getSummary()}}">
             <i class="icon-chevron-right"></i>
-          </button>      
+          </button>
         </div>
-        <div class="grn-info"> 
+        <div class="grn-info">
           <p>
             <span class="grn-star" ng-class="{'grn-starred': currentItem.starred}" ng-click="rate(currentItem)"></span>
             <a href="{{currentItem.url}}" class="grn-title" title="{{currentItem.title}}">
-              {{currentItem.title}} 
+              {{currentItem.title}}
             </a>
           </p>
           <p>
-            <span class="grn-time">{{currentItem.time | date:'short'}}</span> from 
+            <span class="grn-time">{{currentItem.time | date:'short'}}</span> from
             <a href="{{currentItem.origin.url}}" class="grn-origin" title="{{currentItem.origin.title}}">
               {{currentItem.origin.title}}
             </a>
@@ -126,6 +126,6 @@
         <div class="grn-content" bind-compile-html="currentItem.content"></div>
       </div>
     </div>
-  
+
   </body>
 </html>

@@ -27,28 +27,28 @@ var http = (function(config) {
   //    data: 'mydata'
   //  }
   var http = function (url, cfg, onSuccess, onFailure) {
-          
+
     var xhr = new XMLHttpRequest();
-    
+
     // execute when an error is detected
     function handleError() {
       if (onFailure instanceof Function) {
         onFailure();
       }
     }
-    
+
     xhr.timeout = timeOut;
     xhr.ontimeout = handleError;
-    
+
     // execute when request finishes successfully
     function handleSuccess(response) {
       if (onSuccess instanceof Function) {
         onSuccess(response);
       }
-    }    
-    
+    }
+
     // handle the response
-    xhr.onreadystatechange = function(){        
+    xhr.onreadystatechange = function(){
       if (xhr.readyState === 4) {
         if (xhr.status < 400 && xhr.responseText !== undefined) {
           handleSuccess(xhr.responseText)
@@ -57,14 +57,14 @@ var http = (function(config) {
         }
       }
     }
-    
+
     // handle xhr error
     xhr.onerror = function(error) {
       handleError(error);
     }
-    
+
     // construct url
-    var url = 
+    var url =
       url + (url.search(/\?/) < 0 ? '?' : '&') + encodeQueryData(cfg.params);
 
     try {
@@ -73,10 +73,10 @@ var http = (function(config) {
       xhr.send(cfg.data);
     } catch(e) {
       handleError();
-    }    
+    }
 
   };
-        
+
 
 
   http.get = function (url, cfg, onSuccess, onFailure) {
@@ -98,12 +98,12 @@ var http = (function(config) {
 
     http.get(url, cfg, handleSuccess, onFailure);
   };
-    
+
   http.post = function (url, cfg, onSuccess, onFailure) {
     cfg.method = 'POST';
     http(url, cfg, onSuccess, onFailure);
   };
-  
+
   return http;
 
 }());

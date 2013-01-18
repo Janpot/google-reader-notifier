@@ -1,5 +1,5 @@
 (function () {
-  
+
   var clickBehaviours = {
     openPopup: 'openPopup',
     openReader: 'openReader'
@@ -18,7 +18,7 @@
     sync: 'sync',
     local: 'local'
   };
-  
+
   if (localStorage.optionsArea === undefined) {
     localStorage.optionsArea = areas.local;
   }
@@ -26,7 +26,7 @@
   var isSyncEnabled = function () {
     return localStorage.optionsArea === areas.sync;
   };
-  
+
   chrome.storage.onChanged.addListener(function (changes, changedArea) {
     if (changedArea === areas.sync && isSyncEnabled()) {
       // do sync
@@ -41,7 +41,7 @@
   var options = {
 
     enableSync: function (enableSync) {
-      if (enableSync !== isSyncEnabled()) {        
+      if (enableSync !== isSyncEnabled()) {
         localStorage.optionsArea = enableSync ? areas.sync : areas.local;
         if (enableSync) {
           // do sync
@@ -51,9 +51,9 @@
         }
       }
     },
-    
+
     isSyncEnabled: isSyncEnabled,
-    
+
     onChange: function (onChange) {
       chrome.storage.onChanged.addListener(function (changes, changedArea) {
         if (changedArea === areas.local && onChange instanceof Function) {
@@ -61,23 +61,23 @@
         }
       });
     },
-    
+
     get: function (callback) {
       chrome.storage.local.get(optionsObj, callback);
     },
-    
+
     set: function (values, callback) {
       if (isSyncEnabled()) {
         chrome.storage.sync.set(values);
       } else {
-        chrome.storage.local.set(values, callback);        
+        chrome.storage.local.set(values, callback);
       }
     },
-    
+
     clickBehaviours: clickBehaviours
-  
+
   };
-  
+
   window.options = options;
 
 }());

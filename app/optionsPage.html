@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html ng-csp="true" ng-app="Reader.optionsPage" >
   <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
       <link rel="Stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap.css"/>
       <script src="lib/angular/angular.js"></script>
       <script src="js/options.js"></script>
@@ -11,38 +11,38 @@
   </head>
 
   <body ng-controller="OptionsCtrl">
-          
-    
+
+
     <div class="container">
-      
+
       <h1>
         Options
       </h1>
-      
-      
+
+
       <form class="form-horizontal">
-          
-          
+
+
         <fieldset>
-          
+
           <legend>Sync</legend>
-            
+
           <div class="control-group">
             <label class="control-label">Sync options</label>
             <div class="controls">
               <label class="checkbox">
                 <input type="checkbox" ng-checked="syncEnabled()" ng-click="enableSync($event)"/>
-                Sync these options across devices.              
+                Sync these options across devices.
               </label>
             </div>
           </div>
-            
+
         </fieldset>
-        
+
         <fieldset>
-          
+
           <legend>Options</legend>
-            
+
           <div class="control-group">
             <label class="control-label" for="refresh-interval">Refresh interval</label>
             <div class="controls">
@@ -51,7 +51,7 @@
               <span class="help-block">Time between two consecutive updates of the unread count.</span>
             </div>
           </div>
-              
+
           <div class="control-group">
             <label class="control-label" for="refresh-interval">On click</label>
             <div class="controls">
@@ -65,13 +65,13 @@
               </label>
             </div>
           </div>
-              
+
         </fieldset>
-              
+
         <fieldset>
-          
+
           <legend>Icon</legend>
-              
+
           <div class="control-group">
             <label class="control-label">Animate</label>
             <div class="controls">
@@ -81,7 +81,7 @@
               </label>
             </div>
           </div>
-          
+
           <div class="control-group">
             <label class="control-label">Color</label>
             <div class="controls">
@@ -95,9 +95,9 @@
               </label>
             </div>
           </div>
-          
+
         </fieldset>
-            
+
       </form>
     </div>
   </body>

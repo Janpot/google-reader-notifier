@@ -6,12 +6,12 @@ if (newItemCountLabel) {
 
     var count = 0;
     var hasMore = false;
-    
+
     if (match && !newItemCountLabel.classList.contains('hidden')) {
       count = match[1];
       hasMore = match[2] === '+';
     }
-    
+
     console.log('unread count: ' + count);
     chrome.extension.sendMessage({
       method: "updateUnreadCount",
@@ -19,7 +19,7 @@ if (newItemCountLabel) {
       hasMore: hasMore
     });
   }
-  
+
   window.MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
   var observer = new MutationObserver(requestUpdate);
   observer.observe(newItemCountLabel, { attributes: true, characterData: true });

@@ -13,35 +13,35 @@
 // limitations under the License.
 
 var browserAction = (function () {
-  
+
   var ICON_SIZE = 19;
   var drawingContext = document.createElement('canvas').getContext('2d');
-  
+
   var frames = [];
   var imagesToLoad = 0;
   var imagesLoaded = 0;
   var framesLoaded = false;
-  
+
   var colorSignedOut = [202, 204, 211, 255];
   var colorUnread = [152, 0, 16, 255];
   var colorNoUnread = [104, 104, 104, 255];
-  
+
   var color = colorNoUnread;
   var prevCount = -1;
   var currentFrame = 0;
-  
+
   var copyColor = function (from, to) {
     to[0] = from[0];
     to[1] = from[1];
     to[2] = from[2];
     to[3] = from[3];
   };
-  
+
   var paintFrames = function (rgb) {
     if (!framesLoaded) {
       return;
     }
-    
+
     for(var i = 0; i < frames.length; i++) {
       // clear context
       drawingContext.clearRect(0, 0, ICON_SIZE, ICON_SIZE);
@@ -55,45 +55,45 @@ var browserAction = (function () {
       frames[i] = drawingContext.getImageData(0, 0, ICON_SIZE, ICON_SIZE);
     }
   };
-  
+
   var setColor = function (rgb) {
     // set icon color
     paintFrames(rgb);
-  
-    // set badge color 
+
+    // set badge color
     chrome.browserAction.setBadgeBackgroundColor({color: rgb});
-    
+
     render(currentFrame);
   };
-  
+
   var setBadge = function (count) {
     var text = '';
     if(count > 0) {
       // the badge can only hold 4 digits
       text = Math.min(count, 9999) + '';
     }
-    
+
     chrome.browserAction.setBadgeText({
       text: text
     });
   };
-  
+
   var render = function (frameIndex) {
     var frame = frames[frameIndex]
     if (frame) {
       chrome.browserAction.setIcon({imageData: frame});
     }
   };
-  
-  
+
+
   // called when all frames are loaded
   var onFramesLoaded = function (frames) {
     framesLoaded = true;
     paintFrames(color);
     render(currentFrame);
   };
-  
-  
+
+
   // called when a frame is loaded
   var onFrameLoaded = function(e) {
     var img = e.target;
@@ -103,14 +103,14 @@ var browserAction = (function () {
     // save the frame
     frames[img.dataset.id] = drawingContext.getImageData(0, 0, ICON_SIZE, ICON_SIZE);
     imagesLoaded += 1; // this icon is loaded
-      
+
     if(imagesLoaded >= imagesToLoad) {
       // all icons are loaded
       onFramesLoaded(frames);
     }
   };
-  
-  
+
+
   // load the images for the frames
   var urls = [1, 2, 3, 4, 5, 6, 7].map(function (imgNr) {
     return '/img/browseraction/' + imgNr + '.png';
@@ -122,17 +122,17 @@ var browserAction = (function () {
     img.src = url;
     img.dataset.id = index;
   });
-  
-  
+
+
   var aniamtionIntervalId;
 
   // perform animation
   var animate = function() {
-    if (!aniamtionIntervalId) { 
+    if (!aniamtionIntervalId) {
       aniamtionIntervalId = setInterval(animateFrame, 60);
     }
   };
-  
+
   var animateFrame = function () {
     currentFrame = (currentFrame + 1) % frames.length;
     render(currentFrame);
@@ -142,16 +142,16 @@ var browserAction = (function () {
       aniamtionIntervalId = null;
     }
   }
-  
+
   var previewTimeoutId;
-  
+
   var stopPreview = function () {
     setColor(color);
     previewTimeoutId = null;
   };
-  
+
   doAnimation = false;
-  
+
   return {
     setUnreadCount: function (count) {
       count = count || 0;
@@ -161,29 +161,29 @@ var browserAction = (function () {
           setColor(color);
         }
         setBadge(count);
-        
+
         if (count > prevCount && doAnimation) {
-          // animate icon   
+          // animate icon
           animate();
         }
       }
       prevCount = count;
     },
-    
+
     setNoUnreadColor: function (rgb) {
       copyColor(rgb || [0, 0, 0, 255], colorNoUnread);
       setColor(color);
     },
-    
+
     setUnreadColor: function (rgb) {
-      copyColor(rgb || [0, 0, 0, 255], colorUnread); 
-      setColor(color);     
+      copyColor(rgb || [0, 0, 0, 255], colorUnread);
+      setColor(color);
     },
-    
+
     setDoAnimation: function (value) {
       doAnimation = value;
     },
-    
+
     previewColor: function (rgb) {
       setColor(rgb);
       if (previewTimeoutId) {

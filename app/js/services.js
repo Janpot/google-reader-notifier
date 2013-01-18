@@ -3,7 +3,7 @@
 var services = angular.module('Reader.services', []);
 
 services.factory('reader', function ($rootScope, $http, $q) {
-  
+
   var normalize = function (str) {
     str = str || '';
     var subs = {
@@ -11,7 +11,7 @@ services.factory('reader', function ($rootScope, $http, $q) {
       'apos': '\'',
       'quot': '\"',
       'lt': '<',
-      'gt': '>'  
+      'gt': '>'
     }
     return str.replace(/&([^;]+);/g, function (match, char) {
       if (subs[char]!== undefined) {
@@ -21,31 +21,31 @@ services.factory('reader', function ($rootScope, $http, $q) {
         if (asciiMatch) {
           return String.fromCharCode(asciiMatch[1]);
         }
-      }      
+      }
       return match;
     });
   };
-  
+
   var hasCategory = function (raw, categoryMatcher) {
     return raw.categories ? raw.categories.some(function matches(category) {
       return categoryMatcher.test(category);
     }) : false;
   }
-  
+
   // provides a token to a function, retries once on fail
-  var withToken = (function () {    
+  var withToken = (function () {
     var token;
-    
+
     var onRefreshSuccess = function (response) {
       token = response.data;
       return token;
     };
-    
+
     var refreshToken = function () {
       var tokenUrl = 'https://www.google.com/reader/api/0/token';
       return $http.get(tokenUrl).then(onRefreshSuccess);
     };
-    
+
     var ensureToken = function () {
       if(token === undefined) {
         return refreshToken();
@@ -53,20 +53,20 @@ services.factory('reader', function ($rootScope, $http, $q) {
         return $q.when(token);
       }
     };
-    
+
     return function (http) {
       var onHttpSuccess = function (value) {
         return value;
       };
-      
+
       var retry = function (error) {
         return refreshToken().then(http);
       };
-      
+
       return ensureToken().then(http).then(onHttpSuccess, retry);
     };
   }());
-  
+
   var editTag = function (params) {
     var doEditTag = function (token) {
       params = params || {};
@@ -75,10 +75,10 @@ services.factory('reader', function ($rootScope, $http, $q) {
       var editTagUrl = 'https://www.google.com/reader/api/0/edit-tag';
       return $http.post(editTagUrl, '', { params: params });
     };
-    
-    return withToken(doEditTag);    
+
+    return withToken(doEditTag);
   };
-  
+
   var Item = function (raw) {
   // extract the content
     this.content = '';
@@ -87,39 +87,39 @@ services.factory('reader', function ($rootScope, $http, $q) {
     } else if (raw.summary) {
       this.content = raw.summary.content;
     }
-    
+
     // create a snippet
     var tmp = document.createElement('div');
     tmp.innerHTML = this.content.replace(/<img[^>]*>/g,'');
     this.snippet = tmp.textContent;
-    
+
     // create a viewmodel
-    this.title = raw.title ? normalize(raw.title) : '(title unknown)';    
-    
+    this.title = raw.title ? normalize(raw.title) : '(title unknown)';
+
     this.url = ''
     if (raw.alternate && raw.alternate[0] && raw.alternate[0].href) {
       this.url = raw.alternate[0].href;
     }
-    
+
     this.origin = raw.origin ? {
       title: raw.origin.title ? normalize(raw.origin.title) : undefined,
       url: raw.origin.htmlUrl
     } : undefined;
-    
+
     this.author = raw.author;
-    
+
     this.read = hasCategory(raw, /^user\/[-\d]+\/state\/com\.google\/read$/);
     this.starred = hasCategory(raw, /^user\/[-\d]+\/state\/com\.google\/starred$/);
     this.id = raw.id;
-    
+
     if (raw.published) {
       this.time = new Date(raw.published * 1000);
     }
-    
+
     this.keptUnread = hasCategory(raw, /^user\/[-\d]+\/state\/com\.google\/kept-unread$/);
     this.readStateLocked = raw.isReadStateLocked || false;
   };
-  
+
   Item.prototype.markAsRead = function () {
     var readOld = this.read;
     var keptUnreadOld = this.keptUnread;
@@ -137,7 +137,7 @@ services.factory('reader', function ($rootScope, $http, $q) {
       self.keptUnread = keptUnreadOld;
     });
   };
-  
+
   Item.prototype.keepUnread = function () {
     var readOld = this.read;
     var keptUnreadOld = this.keptUnread;
@@ -155,7 +155,7 @@ services.factory('reader', function ($rootScope, $http, $q) {
       self.keptUnread = keptUnreadOld;
     });
   };
-  
+
   Item.prototype.star = function () {
     var oldValue = this.starred;
     this.starred = true;
@@ -167,7 +167,7 @@ services.factory('reader', function ($rootScope, $http, $q) {
       self.starred = oldValue;
     });
   };
-  
+
   Item.prototype.unStar = function () {
     var oldValue = this.starred;
     this.starred = false;
@@ -179,30 +179,30 @@ services.factory('reader', function ($rootScope, $http, $q) {
       self.starred = oldValue;
     });
   };
-  
+
   Item.prototype.getSummary = function () {
     return this.origin.title + ': ' + this.title;
   };
-  
+
   var List = function (url, params) {
     this.url = url;
     this.params = params || {};
     this.continuation;
     this.loading = false;
     this.refreshTime = null;
-    
+
     this.head = null;
     this.tail = null;
   };
-  
+
   List.prototype.loadItems = function (n, refresh) {
     var deferred = $q.defer();
-    
+
     this.params.output = 'json';
     this.params.ck = Date.now();
     this.params.client = 'notifier';
     this.params.n = n || 1;
-    
+
     if (refresh) {
       this.clear();
       delete this.params.c;
@@ -210,7 +210,7 @@ services.factory('reader', function ($rootScope, $http, $q) {
     } else {
       this.params.c = this.continuation;
     }
-    
+
     if (!this.loading) {
       var self = this;
       self.loading = true;
@@ -231,14 +231,14 @@ services.factory('reader', function ($rootScope, $http, $q) {
     } else {
       deferred.reject('Failed to load items');
     }
-    
+
     return deferred.promise;
   };
-  
+
   List.prototype.isEmpty = function () {
     return this.head === null;
   };
-  
+
   List.prototype.push = function (item) {
     if (this.isEmpty()) {
       item.previous = null;
@@ -252,12 +252,12 @@ services.factory('reader', function ($rootScope, $http, $q) {
       this.tail = item;
     }
   };
-  
+
   List.prototype.clear = function () {
     this.head = null;
     this.tail = null;
   };
-  
+
   List.prototype.forEach = function (fn) {
     var iterator = this.head;
     while (iterator) {
@@ -265,7 +265,7 @@ services.factory('reader', function ($rootScope, $http, $q) {
       iterator = iterator.next;
     }
   };
-  
+
   List.prototype.asArray = function () {
     var result = [];
     this.forEach(function (item) {
@@ -273,10 +273,10 @@ services.factory('reader', function ($rootScope, $http, $q) {
     });
     return result;
   };
-  
+
   List.prototype.markAllAsRead = function () {
     var markAllAsReadUrl = 'https://www.google.com/reader/api/0/mark-all-as-read';
-    
+
     var doMarkAllAsRead = function (token) {
       var params = {
         output: 'json',
@@ -285,7 +285,7 @@ services.factory('reader', function ($rootScope, $http, $q) {
       }
       return $http.post(markAllAsReadUrl, '', { params: params });
     }
-    
+
     var self = this;
     var markAllAsReadLocal = function () {
       chrome.extension.sendMessage({ method: "updateUnreadCount" });
@@ -295,26 +295,26 @@ services.factory('reader', function ($rootScope, $http, $q) {
         item.readStateLocked = true;
       });
     };
-    
+
     withToken(doMarkAllAsRead).then(markAllAsReadLocal);
   };
-  
+
   List.prototype.canLoadMore = function () {
     return this.continuation || this.loading;
   };
-  
-  
+
+
   return {
     getReadingList: function (n) {
       return new List('https://www.google.com/reader/api/0/stream/contents/user/-/state/com.google/reading-list');
     },
-    
+
     getUnreadList: function (n) {
       return new List('https://www.google.com/reader/api/0/stream/contents/user/-/state/com.google/reading-list', {
         xt: 'user/-/state/com.google/read'
       });
     },
-    
+
     getStarredList: function (n) {
       return new List('https://www.google.com/reader/api/0/stream/contents/user/-/state/com.google/starred');
     }
@@ -324,17 +324,17 @@ services.factory('reader', function ($rootScope, $http, $q) {
 
 
 services.factory('options', function($rootScope, $q) {
-  
+
   var controllerObj = {};
-  
+
   options.onChange(function (changes) {
     $rootScope.$apply(function () {
       for (var property in changes) {
         controllerObj[property] = changes[property].newValue;
       }
     });
-  });  
-  
+  });
+
   return {
     get: function (callback) {
       options.get(function (values) {
@@ -347,13 +347,13 @@ services.factory('options', function($rootScope, $q) {
       });
       return controllerObj;
     },
-    
+
     set: function (values) {
       options.set(values);
     },
-    
+
     enableSync: options.enableSync,
-    
+
     isSyncEnabled: options.isSyncEnabled
   };
 });

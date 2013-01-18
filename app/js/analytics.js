@@ -9,21 +9,21 @@ _gaq.push(['_setAccount', 'UA-18936219-1']);
 
 
 var analytics = (function () {
-    
+
   return {
-    
+
     views: {
       tab: 'tab',
       popup: 'popup'
     },
-    
+
     itemViewedIn: function (item, where) {
       if (!item.read) {
         _gaq.push(['_trackEvent', 'Item', 'View', where]);
         // track 'view item in extension'
       }
     }
-  
+
   };
-  
+
 }());

@@ -29,12 +29,12 @@ var refreshUnreadCount = function () {
     for (var i = 0; i < response.unreadcounts.length; i++) {
       found = isReadingList(response.unreadcounts[i].id)
       if (found) {
-        
+
         browserAction.setUnreadCount(response.unreadcounts[i].count);
         break;
       }
     }
-  
+
     if (!found) {
       browserAction.setUnreadCount(0);
     }
@@ -67,7 +67,7 @@ var parseColor = function (hex) {
       255
     ];
   } else {
-    match = /^#([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})$/.exec(hex);    
+    match = /^#([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})$/.exec(hex);
     if (match) {
       return [
         parseInt(match[1], 16),
@@ -81,9 +81,9 @@ var parseColor = function (hex) {
 };
 
 options.get(function (values) {
-  var unreadColor = parseColor(values.colorUnread);  
+  var unreadColor = parseColor(values.colorUnread);
   browserAction.setUnreadColor(unreadColor);
-  var noUnreadColor = parseColor(values.colorNoUnread);  
+  var noUnreadColor = parseColor(values.colorNoUnread);
   browserAction.setNoUnreadColor(noUnreadColor);
   browserAction.setDoAnimation(values.doAnimation);
   setUpdateInterval(values.updateInterval);
@@ -95,27 +95,27 @@ options.onChange(function (changes) {
   if (changes.updateInterval) {
     setUpdateInterval(changes.updateInterval.newValue);
   }
-  
+
   if (changes.colorUnread) {
-    var unreadColor = parseColor(changes.colorUnread.newValue);  
+    var unreadColor = parseColor(changes.colorUnread.newValue);
     if (unreadColor) {
       browserAction.setUnreadColor(unreadColor);
       browserAction.previewColor(unreadColor);
     }
   }
-  
+
   if (changes.colorNoUnread) {
-    var noUnreadColor = parseColor(changes.colorNoUnread.newValue);  
+    var noUnreadColor = parseColor(changes.colorNoUnread.newValue);
     if (noUnreadColor) {
       browserAction.setNoUnreadColor(noUnreadColor);
       browserAction.previewColor(noUnreadColor);
     }
   }
-  
+
   if (changes.doAnimation) {
     browserAction.setDoAnimation(changes.doAnimation.newValue);
   }
-  
+
   if (changes.clickBehaviour) {
     setClickBehaviour(changes.clickBehaviour.newValue);
   }

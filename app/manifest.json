@@ -11,7 +11,7 @@
     "128": "img/icon-128.png"
   },
   "name": "Notifier for Google Reader™",
-  "permissions": [ 
+  "permissions": [
     "alarms",
     "storage",
     "tabs",

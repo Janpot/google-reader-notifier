@@ -85,6 +85,14 @@ angular.module('Reader.directives', [])
     };
   })
 
+  .directive('resetScroll', function() {
+    return function(scope, element, attr) {
+      scope.$watch(attr.resetScroll, function (value) {
+        element[0].scrollTop = 0;
+      });
+    };
+  })
+
   .directive('middleClick', function($parse) {
     return {
       restrict: 'A',

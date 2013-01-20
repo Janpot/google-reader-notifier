@@ -21,7 +21,6 @@ angular.module('Reader.filters', [])
 
       var today = new Date(year, month, day);
       if (date >= today) {
-        console.log(date, today);
         return format(date, 'shortTime');
       }
 

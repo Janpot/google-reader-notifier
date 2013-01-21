@@ -91,39 +91,39 @@
     <div id="item-view" ng-show="view == views.item" class="ng-cloak">
       <header>
         <div class="grn-navigation btn-group">
-          <button class="btn" ng-click="showPreviousItem()" ng-disabled="!currentItem.previous" title="{{currentItem.previous.getSummary()}}">
+          <button class="btn" ng-click="showPreviousItem()" ng-disabled="!iterator.getPrevious()" title="{{iterator.getPrevious().getSummary()}}">
             <i class="icon-chevron-left"></i>
           </button>
           <button class="btn" ng-click="showListView()" title="list">
             <i class="icon-align-justify"></i>
           </button>
-          <button class="btn" ng-click="showNextItem()" ng-disabled="!currentItem.next" title="{{currentItem.next.getSummary()}}">
+          <button class="btn" ng-click="showNextItem()" ng-disabled="!iterator.getNext()" title="{{iterator.getNext().getSummary()}}">
             <i class="icon-chevron-right"></i>
           </button>
         </div>
         <div class="grn-info">
           <p>
-            <span class="grn-star" ng-class="{'grn-starred': currentItem.starred}" ng-click="rate(currentItem)"></span>
-            <a href="{{currentItem.url}}" class="grn-title" title="{{currentItem.title}}">
-              {{currentItem.title}}
+            <span class="grn-star" ng-class="{'grn-starred': iterator.current.starred}" ng-click="rate(iterator.current)"></span>
+            <a href="{{iterator.current.url}}" class="grn-title" title="{{iterator.current.title}}">
+              {{iterator.current.title}}
             </a>
           </p>
           <p>
-            <span class="grn-time">{{currentItem.time | prettyDateTime}}</span> from
-            <a href="{{currentItem.origin.url}}" class="grn-origin" title="{{currentItem.origin.title}}">
-              {{currentItem.origin.title}}
+            <span class="grn-time">{{iterator.current.time | prettyDateTime}}</span> from
+            <a href="{{iterator.current.origin.url}}" class="grn-origin" title="{{iterator.current.origin.title}}">
+              {{iterator.current.origin.title}}
             </a>
-            <span ng-show="currentItem.author"> by {{currentItem.author}}</span>
+            <span ng-show="iterator.current.author"> by {{iterator.current.author}}</span>
           </p>
           <p class="grn-commands">
-            <a ng-show="!currentItem.readStateLocked" ng-click="toggleKeepUnread(currentItem)">
-              <i ng-class="currentItem.keptUnread | conditional:'icon-check':'icon-check-empty'"></i> Keep unread
+            <a ng-show="!iterator.current.readStateLocked" ng-click="toggleKeepUnread(iterator.current)">
+              <i ng-class="iterator.current.keptUnread | conditional:'icon-check':'icon-check-empty'"></i> Keep unread
             </a>
           </p>
         </div>
       </header>
-      <div class="grn-container" reset-scroll="currentItem.content">
-        <div class="grn-content" bind-compile-html="currentItem.content"></div>
+      <div class="grn-container" reset-scroll="iterator.current.content">
+        <div class="grn-content" bind-compile-html="iterator.current.content"></div>
       </div>
     </div>
 

@@ -1,46 +1,28 @@
 angular.module('Reader.directives', [])
 
-  .directive('readerlist', function($parse) {
-    return {
-      restrict: 'E',
-      replace: true,
-      transclude: 'element',
-      scope: true,
-      template: [
-        '<div class="grn-container">',
-          '<ul class="grn-items-list">',
-            '<li class="grn-list-item scroll-item" ng-repeat="item in items" ng-transclude></li>',
-            '<li class="grn-loading scroll-item">',
-              '<img src="img/loading.gif"/>',
-            '</li>',
-          '</ul>',
-        '</div>'
-      ].join(''),
-      link: function(scope, elm, attr) {
-        var match = attr.repeat.match(/^\s*(.+)\s+in\s+(.*)\s*$/);
-
-        var lhs = match[1];
-        var rhs = match[2];
-        scope.item = {};
-        scope.$watch(rhs, function (value) {
-          scope.items = value;
-        });
-      }
-    };
-  })
-
   .directive('onLoadMore', function($parse) {
     return function(scope, elm, attr) {
       var raw = elm[0];
       var canLoadMore = $parse(attr.canLoadMore);
 
-      elm.bind('scroll', function() {
+      var ensureItems = function () {
         if (!canLoadMore(scope)) {
           return;
         }
         if (raw.scrollTop + raw.offsetHeight + 200 >= raw.scrollHeight) {
           scope.$apply(attr.onLoadMore);
         }
+      };
+
+      elm.bind('scroll', ensureItems);
+
+      window.MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+      var observer = new window.MutationObserver(ensureItems);
+      observer.observe(raw,{ childList: true, subtree: true });
+
+      scope.$on('$destroy', function () {
+        console.log('destroy');
+        observer.disconnect();
       });
     };
   })
@@ -157,7 +139,7 @@ angular.module('Reader.directives', [])
           nextIndex = Math.max(Math.min(firstVisibleItemIdx - n, items.length - 1), 0);
           var topElement = items[nextIndex];
           // scroll to position
-          element[0].scrollTop = topElement.offsetTop - parentOffsetTop;
+          topElement.scrollIntoView(true);
         };
 
         element.bind('mousewheel', function(event) {

@@ -51,13 +51,13 @@ function PopupCtrl($scope, $filter, reader, options) {
   $scope.error = null;
   $scope.view = $scope.views.list;
   $scope.reader = $scope.readers.all;
-  $scope.currentItem;
+  $scope.iterator;
 
   $scope.showItemView = function (item) {
-    $scope.currentItem = item;
-    analytics.itemViewedIn($scope.currentItem, analytics.views.popup);
-    if (!$scope.currentItem.keptUnread) {
-      $scope.currentItem.markAsRead();
+    $scope.iterator = $scope.reader.list.getIterator(item);
+    analytics.itemViewedIn($scope.iterator.current, analytics.views.popup);
+    if (!$scope.iterator.current.keptUnread) {
+      $scope.iterator.current.markAsRead();
     }
     $scope.view = $scope.views.item;
   };
@@ -76,21 +76,21 @@ function PopupCtrl($scope, $filter, reader, options) {
   };
 
   $scope.showNextItem = function () {
-    $scope.currentItem = $scope.currentItem.next;
-    analytics.itemViewedIn($scope.currentItem, analytics.views.popup);
-    if (!$scope.currentItem.keptUnread) {
-      $scope.currentItem.markAsRead();
+    $scope.iterator.moveNext();
+    analytics.itemViewedIn($scope.iterator.current, analytics.views.popup);
+    if (!$scope.iterator.current.keptUnread) {
+      $scope.iterator.current.markAsRead();
     }
-    if (!$scope.currentItem.next && $scope.reader.list.canLoadMore()) {
+    if (!$scope.iterator.getNext() && $scope.reader.list.canLoadMore()) {
       $scope.reader.list.loadItems(10);
     }
   };
 
   $scope.showPreviousItem = function () {
-    $scope.currentItem = $scope.currentItem.previous;
-    analytics.itemViewedIn($scope.currentItem, analytics.views.popup);
-    if (!$scope.currentItem.keptUnread) {
-      $scope.currentItem.markAsRead();
+    $scope.iterator.movePrevious();
+    analytics.itemViewedIn($scope.iterator.current, analytics.views.popup);
+    if (!$scope.iterator.current.keptUnread) {
+      $scope.iterator.current.markAsRead();
     }
   };
 
@@ -104,7 +104,7 @@ function PopupCtrl($scope, $filter, reader, options) {
 
   var filter = $filter('filter');
   $scope.filterItems = function() {
-    return filter($scope.reader.list.asArray(), $scope.reader.filter);
+    return filter($scope.reader.list.items, $scope.reader.filter);
   }
 
   $scope.showList = function (list) {

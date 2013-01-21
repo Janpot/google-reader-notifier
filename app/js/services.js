@@ -190,9 +190,7 @@ services.factory('reader', function ($rootScope, $http, $q) {
     this.continuation;
     this.loading = false;
     this.refreshTime = null;
-
-    this.head = null;
-    this.tail = null;
+    this.items = [];
   };
 
   List.prototype.loadItems = function (n, refresh) {
@@ -204,7 +202,7 @@ services.factory('reader', function ($rootScope, $http, $q) {
     this.params.n = n || 1;
 
     if (refresh) {
-      this.clear();
+      this.items = [];
       delete this.params.c;
       this.refreshTime = Date.now();
     } else {
@@ -219,7 +217,7 @@ services.factory('reader', function ($rootScope, $http, $q) {
       }).success(function onSuccess(data) {
         console.log(data);
         data.items.forEach(function addToList(raw) {
-          self.push(new Item(raw));
+          self.items.push(new Item(raw));
         });
         self.continuation = data.continuation;
         self.loading = false;
@@ -236,42 +234,43 @@ services.factory('reader', function ($rootScope, $http, $q) {
   };
 
   List.prototype.isEmpty = function () {
-    return this.head === null;
+    return this.items.length === 0;
   };
 
-  List.prototype.push = function (item) {
-    if (this.isEmpty()) {
-      item.previous = null;
-      item.next = null;
-      this.head = item;
-      this.tail = item;
+  List.prototype.getIterator = function (item) {
+    return new ListIterator(this, item);
+  };
+
+  var ListIterator = function (list, item) {
+    this.list = list;
+    this.current = null;
+    this.init(this.list.items.indexOf(item));
+  };
+
+  ListIterator.prototype.init = function (idx) {
+    if (idx >= 0) {
+      this.current = this.list.items[idx];
     } else {
-      item.previous = this.tail;
-      item.next = null;
-      this.tail.next = item;
-      this.tail = item;
+      this.current = null;
     }
   };
 
-  List.prototype.clear = function () {
-    this.head = null;
-    this.tail = null;
+  ListIterator.prototype.getNext = function () {
+    var idx = this.list.items.indexOf(this.current);
+    return this.list.items[idx + 1];
   };
 
-  List.prototype.forEach = function (fn) {
-    var iterator = this.head;
-    while (iterator) {
-      fn(iterator);
-      iterator = iterator.next;
-    }
+  ListIterator.prototype.getPrevious = function () {
+    var idx = this.list.items.indexOf(this.current);
+    return this.list.items[idx - 1];
   };
 
-  List.prototype.asArray = function () {
-    var result = [];
-    this.forEach(function (item) {
-      result.push(item);
-    });
-    return result;
+  ListIterator.prototype.moveNext = function () {
+    this.current = this.getNext();
+  };
+
+  ListIterator.prototype.movePrevious = function () {
+    this.current = this.getPrevious();
   };
 
   List.prototype.markAllAsRead = function () {
@@ -289,7 +288,7 @@ services.factory('reader', function ($rootScope, $http, $q) {
     var self = this;
     var markAllAsReadLocal = function () {
       chrome.extension.sendMessage({ method: "updateUnreadCount" });
-      self.forEach(function (item) {
+      self.items.forEach(function (item) {
         item.read = true;
         item.keptUnread = false;
         item.readStateLocked = true;

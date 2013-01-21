@@ -1,25 +1,22 @@
 {
-  "browser_action": {
-    "default_icon": "img/icon-32.png",
-    "default_title": "Google Reader Notifier"
-  },
-  "description": "Counts the unread items in Google Reader™ and shows previews in a popup.",
+
+  "name": "__MSG_extension_name__",
+  "version": "2.1.13",
+  "manifest_version": 2,
+  "description": "__MSG_extension_description__",
+  "default_locale": "en",
   "icons": {
     "16": "img/icon-16.png",
     "32": "img/icon-32.png",
     "64": "img/icon-64.png",
     "128": "img/icon-128.png"
   },
-  "name": "Notifier for Google Reader™",
-  "permissions": [
-    "alarms",
-    "storage",
-    "tabs",
-    "https://www.google.com/reader/"
-  ],
-  "version": "2.1.13",
-  "manifest_version": 2,
-  "options_page": "optionsPage.html",
+
+  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
+  "browser_action": {
+    "default_icon": "img/icon-32.png",
+    "default_title": "Notifier for Google Reader™"
+  },
   "background": {
     "scripts": [
       "js/options.js",
@@ -29,6 +26,7 @@
     ],
     "persistent": true
   },
+  "options_page": "optionsPage.html",
   "content_scripts": [
     {
       "matches": [
@@ -38,5 +36,10 @@
       "js": ["js/liveUpdater.js"]
     }
   ],
-  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'"
+  "permissions": [
+    "alarms",
+    "storage",
+    "tabs",
+    "https://www.google.com/reader/"
+  ]
 }

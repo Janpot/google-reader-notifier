@@ -31,24 +31,24 @@
 
           <div class="btn-group">
             <button class="btn" ng-click="showList(reader == readers.all && readers.unread || readers.all)">
-              <span ng-show="reader != readers.all"><i class="icon-home"></i> All items</span>
-              <span ng-show="reader == readers.all"><i class="icon-flag"></i> Unread items</span>
+              <span ng-show="reader != readers.all"><i class="icon-home"></i> <span i18n-content="popup_btnAllItems"></span></span>
+              <span ng-show="reader == readers.all"><i class="icon-flag"></i> <span i18n-content="popup_btnUnreadItems"></span></span>
             </button>
             <button class="btn dropdown-toggle" data-toggle="dropdown">
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
               <li ng-show="reader != readers.all && reader != readers.unread">
-                <a ng-click="showList(readers.unread)"><i class="icon-flag"></i> Unread items</a>
+                <a ng-click="showList(readers.unread)"><i class="icon-flag"></i> <span i18n-content="popup_btnUnreadItems"></span></a>
               </li>
               <li ng-show="reader != readers.starred">
-                <a ng-click="showList(readers.starred)"><i class="icon-star"></i> Starred items</a>
+                <a ng-click="showList(readers.starred)"><i class="icon-star"></i> <span i18n-content="popup_btnStarredItems"></span></a>
               </li>
             </ul>
           </div>
 
           <button class="btn" ng-click="reader.list.markAllAsRead()">
-            <i class="icon-ok"></i> Mark all as read
+            <i class="icon-ok"></i> <span i18n-content="popup_btnMarkAllAsRead"></span>
           </button>
         </div>
 
@@ -68,7 +68,7 @@
                 from <a title="{{item.origin.title}}">{{item.origin.title}}</a>
               </span>
               <ul class="grn-item-commands">
-                <li><a ng-click="item.markAsRead();$event.stopPropagation();">Mark as read</a></li>
+                <li><a ng-click="item.markAsRead();$event.stopPropagation();"><span i18n-content="popup_btnMarkAsRead"></span></a></li>
               </ul>
             </div>
           </li>
@@ -79,7 +79,11 @@
         </div>
 
         <div class="grn-message" ng-show="filterItems().length <= 0 && !reader.list.loading">
-          No items in this list. <span ng-show="currentList != readers.all">Show <a ng-click="showList(readers.all)">all items</a> instead?</span>
+          <span i18n-content="popup_EmptyListMsg"></span>
+          <span i18n-content="popup_EmptyListToAllItemsMsg">
+            <!--directive: i18n-substitute $1:<a ng-click="showList(readers.all)">-->
+            <!--directive: i18n-substitute $2:</a>-->
+          </span>
         </div>
       </div>
 

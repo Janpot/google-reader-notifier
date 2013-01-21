@@ -1,0 +1,33 @@
+{
+  "extension_name": {
+    "message": "Notifier for Google Reader™"
+  },
+  "extension_description": {
+    "message": "Counts the unread items in Google Reader™ and shows previews in a popup."
+  },
+
+
+  "popup_btnAllItems": {
+    "message": "All items"
+  },
+  "popup_btnUnreadItems": {
+    "message": "Unread items"
+  },
+  "popup_btnStarredItems": {
+    "message": "Starred items"
+  },
+  "popup_btnMarkAllAsRead": {
+    "message": "Mark all as read"
+  },
+  "popup_btnMarkAsRead": {
+    "message": "Mark as read"
+  },
+  "popup_EmptyListMsg": {
+    "message": "No items in this list."
+  },
+  "popup_EmptyListToAllItemsMsg": {
+    "message": "Show $1all items$2 instead?"
+  }
+
+
+}

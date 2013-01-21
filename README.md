@@ -35,6 +35,11 @@ I'm happy to accept bug fixes. I can't promise to accept new features.
 
 ##version history
 
+###2.1.13: Load all the items
+  * Fix issue to load extra items when marking as read in unread list.
+  * Reset scrolling when a new item is shown.
+  * Show nicer dates and times.
+
 ###2.1.10 - 2.1.12: Defense mode
   * Be more defensive against received data.
   * Clean up + small bugfixes

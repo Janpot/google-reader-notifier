@@ -1,0 +1,33 @@
+{
+  "extension_name": {
+    "message": "Notifier voor Google Reader™"
+  },
+  "extension_description": {
+    "message": "Toont het aantal ongelezen items in Google Reader™ en geeft een preview in de popup."
+  },
+
+
+  "popup_btnAllItems": {
+    "message": "Alle items"
+  },
+  "popup_btnUnreadItems": {
+    "message": "Ongelezen items"
+  },
+  "popup_btnStarredItems": {
+    "message": "Items met ster"
+  },
+  "popup_btnMarkAllAsRead": {
+    "message": "Markeer alles als gelezen"
+  },
+  "popup_btnMarkAsRead": {
+    "message": "Markeer als gelezen"
+  },
+  "popup_EmptyListMsg": {
+    "message": "Deze lijst is leeg."
+  },
+  "popup_EmptyListToAllItemsMsg": {
+    "message": "Toon $1alle items$2?"
+  }
+
+
+}

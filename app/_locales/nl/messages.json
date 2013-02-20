@@ -27,6 +27,12 @@
   },
   "popup_EmptyListToAllItemsMsg": {
     "message": "Toon $1alle items$2?"
+  },
+  "popup_OriginText": {
+    "message": "Van $1"
+  },
+  "popup_AuthorText": {
+    "message": "door $1"
   }
 
 

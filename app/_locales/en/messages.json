@@ -27,6 +27,12 @@
   },
   "popup_EmptyListToAllItemsMsg": {
     "message": "Show $1all items$2 instead?"
+  },
+  "popup_OriginText": {
+    "message": "From $1"
+  },
+  "popup_AuthorText": {
+    "message": "by $1"
   }
 
 

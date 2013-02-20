@@ -31,24 +31,24 @@
 
           <div class="btn-group">
             <button class="btn" ng-click="showList(reader == readers.all && readers.unread || readers.all)">
-              <span ng-show="reader != readers.all"><i class="icon-home"></i> <span i18n-content="popup_btnAllItems"></span></span>
-              <span ng-show="reader == readers.all"><i class="icon-flag"></i> <span i18n-content="popup_btnUnreadItems"></span></span>
+              <span ng-show="reader != readers.all"><i class="icon-home"></i> <span i18n-content="popup_btnAllItems">All items</span></span>
+              <span ng-show="reader == readers.all"><i class="icon-flag"></i> <span i18n-content="popup_btnUnreadItems">Unread items</span></span>
             </button>
             <button class="btn dropdown-toggle" data-toggle="dropdown">
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
               <li ng-show="reader != readers.all && reader != readers.unread">
-                <a ng-click="showList(readers.unread)"><i class="icon-flag"></i> <span i18n-content="popup_btnUnreadItems"></span></a>
+                <a ng-click="showList(readers.unread)"><i class="icon-flag"></i> <span i18n-content="popup_btnUnreadItems">Unread items</span></a>
               </li>
               <li ng-show="reader != readers.starred">
-                <a ng-click="showList(readers.starred)"><i class="icon-star"></i> <span i18n-content="popup_btnStarredItems"></span></a>
+                <a ng-click="showList(readers.starred)"><i class="icon-star"></i> <span i18n-content="popup_btnStarredItems">Starred items</span></a>
               </li>
             </ul>
           </div>
 
           <button class="btn" ng-click="reader.list.markAllAsRead()">
-            <i class="icon-ok"></i> <span i18n-content="popup_btnMarkAllAsRead"></span>
+            <i class="icon-ok"></i> <span i18n-content="popup_btnMarkAllAsRead">Mark all as read</span>
           </button>
         </div>
 
@@ -64,8 +64,8 @@
                 <a class="grn-item-title" middle-click="openInChrome(item)">{{item.title}}</a>
                 {{item.snippet}}
               </span>
-              <span class="grn-item-origin" middle-click="openUrl(item.origin.url, true)">
-                from <a title="{{item.origin.title}}">{{item.origin.title}}</a>
+              <span class="grn-item-origin" middle-click="openUrl(item.origin.url, true)" i18n-content="popup_OriginText">
+                From <!--directive: i18n-substitute $1:<a title="{{item.origin.title}}">{{item.origin.title}}</a>-->                
               </span>
               <ul class="grn-item-commands">
                 <li><a ng-click="item.markAsRead();$event.stopPropagation();"><span i18n-content="popup_btnMarkAsRead"></span></a></li>
@@ -79,10 +79,13 @@
         </div>
 
         <div class="grn-message" ng-show="filterItems().length <= 0 && !reader.list.loading">
-          <span i18n-content="popup_EmptyListMsg"></span>
-          <span i18n-content="popup_EmptyListToAllItemsMsg">
+          <span i18n-content="popup_EmptyListMsg">No items in this list.</span>
+          <span i18n-content="popup_EmptyListToAllItemsMsg" ng-hide="reader == readers.all">
+            Show 
             <!--directive: i18n-substitute $1:<a ng-click="showList(readers.all)">-->
+            all items
             <!--directive: i18n-substitute $2:</a>-->
+            instead?
           </span>
         </div>
       </div>
@@ -113,11 +116,15 @@
             </a>
           </p>
           <p>
-            <span class="grn-time">{{iterator.current.time | prettyDateTime}}</span> from
-            <a href="{{iterator.current.origin.url}}" class="grn-origin" title="{{iterator.current.origin.title}}">
-              {{iterator.current.origin.title}}
-            </a>
-            <span ng-show="iterator.current.author"> by {{iterator.current.author}}</span>
+            <span class="grn-time">{{iterator.current.time | prettyDateTime}}</span>
+            <span class="grn-item-origin" middle-click="openUrl(item.origin.url, true)" i18n-content="popup_OriginText">
+              From 
+              <!--directive: i18n-substitute $1:<a href="{{iterator.current.origin.url}}" class="grn-origin" title="{{iterator.current.origin.title}}">{{iterator.current.origin.title}}</a>-->                
+            </span>
+            <span ng-show="iterator.current.author" i18n-content="popup_AuthorText">
+              by 
+              <!--directive: i18n-substitute $1:{{iterator.current.author}}-->
+            </span>
           </p>
           <p class="grn-commands">
             <a ng-show="!iterator.current.readStateLocked" ng-click="toggleKeepUnread(iterator.current)">

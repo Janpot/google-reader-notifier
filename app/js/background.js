@@ -15,6 +15,7 @@ var makeTagComparer = function (tag) {
   return function (string) {
     return matcher.test(string);
   };
+      
 };
 
 var refreshUnreadCount = function () {

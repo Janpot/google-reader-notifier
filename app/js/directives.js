@@ -95,27 +95,15 @@ angular.module('Reader.directives', [])
 
  .directive('scrollNice', function() {
 
-    var getVisibleItems = function (parent, selector) {
-      domItems = parent.querySelectorAll(selector);
-      var result = [];
-      for (var i = 0; i < domItems.length; i++) {
-        var element = domItems.item(i);
-        var visible = element.style.display !== 'none';
-
-        if (visible) {
-          result.push(element);
-        }
-      }
-
-      return result;
-    };
-
     return {
       restrict: 'A',
       link: function(scope, element, attr) {
         var scrollItems = function (n) {
-          var items = getVisibleItems(element[0], attr.scrollNice);
-
+          var items = element.find(selector)
+                             .filter(function(index, element) {
+                               return element.style.display != 'none'
+                             });
+          
           var scrollTop = element[0].scrollTop;
           var parentOffsetTop = element[0].offsetTop;
 
@@ -137,13 +125,14 @@ angular.module('Reader.directives', [])
           }
           // get the next item
           nextIndex = Math.max(Math.min(firstVisibleItemIdx - n, items.length - 1), 0);
+            
           var topElement = items[nextIndex];
           // scroll to position
           topElement.scrollIntoView(true);
         };
 
         element.bind('mousewheel', function(event) {
-          var amount = Math.round(event.wheelDeltaY / 120);
+          var amount = Math.round(event.originalEvent.wheelDeltaY / 120);
           scrollItems(amount);
           event.preventDefault();
         });

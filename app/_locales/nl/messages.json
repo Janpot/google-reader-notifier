@@ -33,6 +33,83 @@
   },
   "popup_AuthorText": {
     "message": "door $1"
+  },
+  
+  
+  "options_Title": {
+    "message": "Opties"
+  },
+  
+  "options_sync_Title": {
+    "message": "Sync"
+  },  
+  "options_sync_SyncOptions": {
+    "message": "Synchroniseer"
+  },
+  "options_sync_SyncOptionsMsg": {
+    "message": "Synchroniseer opties tussen verschillende apparaten."
+  },
+  
+  "options_behavior_Title": {
+    "message": "Gedrag"
+  },
+  "options_behavior_RefreshInterval": {
+    "message": "Refresh interval"
+  },
+  "options_behavior_RefreshIntervalMsg": {
+    "message": "Tijd tussen twee opeenvolgende updates van het aantal ongelezen items."
+  },
+  "options_behavior_1Minute": {
+    "message": "1 minuut"
+  },
+  "options_behavior_5Minutes": {
+    "message": "5 minuten"
+  },
+  "options_behavior_10Minutes": {
+    "message": "10 minuten"
+  },
+  "options_behavior_15Minutes": {
+    "message": "15 minuten"
+  },
+  "options_behavior_30Minutes": {
+    "message": "30 minuten"
+  },
+  "options_behavior_1Hour": {
+    "message": "1 uur"
+  },
+  "options_behavior_4Hours": {
+    "message": "4 uren"
+  },
+  "options_behavior_8Hours": {
+    "message": "8 uren"
+  },
+  "options_behavior_OnClick": {
+    "message": "Bij een klik"
+  },
+  "options_behavior_OnClickPopup": {
+    "message": "open een popup"
+  },
+  "options_behavior_OnClickReader": {
+    "message": "open Google Reader"
+  },
+  
+  "options_icon_Title": {
+    "message": "Knop"
+  },
+  "options_icon_Animate": {
+    "message": "Animeer"
+  },
+  "options_icon_AnimateMsg": {
+    "message": "Animeer de knop wanneer nieuwe items beschikbaar komen."
+  },
+  "options_icon_Color": {
+    "message": "Kleur"
+  },
+  "options_icon_ColorNoUnreadMsg": {
+    "message": "Wanneer de lijst geen ongelezen items bevat."
+  },
+  "options_icon_ColorUnreadMsg": {
+    "message": "Wanneer de lijst ongelezen items bevat."
   }
 
 

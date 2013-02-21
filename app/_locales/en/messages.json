@@ -33,6 +33,83 @@
   },
   "popup_AuthorText": {
     "message": "by $1"
+  },
+  
+  
+  "options_Title": {
+    "message": "Options"
+  },
+  
+  "options_sync_Title": {
+    "message": "Sync"
+  },  
+  "options_sync_SyncOptions": {
+    "message": "Sync"
+  },
+  "options_sync_SyncOptionsMsg": {
+    "message": "Sync these options across devices."
+  },
+  
+  "options_behavior_Title": {
+    "message": "Behavior"
+  },
+  "options_behavior_RefreshInterval": {
+    "message": "Refresh interval"
+  },
+  "options_behavior_RefreshIntervalMsg": {
+    "message": "Time between two consecutive updates of the unread count."
+  },
+  "options_behavior_1Minute": {
+    "message": "1 minute"
+  },
+  "options_behavior_5Minutes": {
+    "message": "5 minutes"
+  },
+  "options_behavior_10Minutes": {
+    "message": "10 minutes"
+  },
+  "options_behavior_15Minutes": {
+    "message": "15 minutes"
+  },
+  "options_behavior_30Minutes": {
+    "message": "30 minutes"
+  },
+  "options_behavior_1Hour": {
+    "message": "1 hour"
+  },
+  "options_behavior_4Hours": {
+    "message": "4 hours"
+  },
+  "options_behavior_8Hours": {
+    "message": "8 hours"
+  },
+  "options_behavior_OnClick": {
+    "message": "On click"
+  },
+  "options_behavior_OnClickPopup": {
+    "message": "open a popup"
+  },
+  "options_behavior_OnClickReader": {
+    "message": "open Google Reader"
+  },
+  
+  "options_icon_Title": {
+    "message": "Icon"
+  },
+  "options_icon_Animate": {
+    "message": "Animate"
+  },
+  "options_icon_AnimateMsg": {
+    "message": "Use an animation to indicate new items have arrived."
+  },
+  "options_icon_Color": {
+    "message": "Color"
+  },
+  "options_icon_ColorNoUnreadMsg": {
+    "message": "When the reading list has no unread items."
+  },
+  "options_icon_ColorUnreadMsg": {
+    "message": "When the reading list has unread items."
   }
 
 

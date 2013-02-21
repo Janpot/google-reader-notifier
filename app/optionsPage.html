@@ -15,7 +15,7 @@
 
     <div class="container">
 
-      <h1>
+      <h1 i18n-content="options_Title">
         Options
       </h1>
 
@@ -25,14 +25,18 @@
 
         <fieldset>
 
-          <legend>Sync</legend>
+          <legend i18n-content="options_sync_Title">Sync</legend>
 
           <div class="control-group">
-            <label class="control-label">Sync options</label>
+            <label class="control-label" i18n-content="options_sync_SyncOptions">
+              Sync options
+            </label>
             <div class="controls">
               <label class="checkbox">
                 <input type="checkbox" ng-checked="syncEnabled()" ng-click="enableSync($event)"/>
-                Sync these options across devices.
+                <span i18n-content="options_sync_SyncOptionsMsg">
+                  Sync these options across devices.
+                </span>
               </label>
             </div>
           </div>
@@ -41,27 +45,39 @@
 
         <fieldset>
 
-          <legend>Options</legend>
+          <legend i18n-content="options_behavior_Title">Behavior</legend>
 
           <div class="control-group">
-            <label class="control-label" for="refresh-interval">Refresh interval</label>
+            <label class="control-label" for="refresh-interval" i18n-content="options_behavior_RefreshInterval">
+              Refresh interval
+            </label>
             <div class="controls">
-              <select class="inline" ng-model="options.updateInterval" ng-options="interval.value as interval.description for interval in refreshIntervals">
+              <select class="inline" 
+                      ng-model="options.updateInterval" 
+                      ng-options="interval.value as interval.description for interval in refreshIntervals">
               </select>
-              <span class="help-block">Time between two consecutive updates of the unread count.</span>
+              <span class="help-block" i18n-content="options_behavior_RefreshIntervalMsg">
+                Time between two consecutive updates of the unread count.
+              </span>
             </div>
           </div>
 
           <div class="control-group">
-            <label class="control-label" for="refresh-interval">On click</label>
+            <label class="control-label" for="refresh-interval" i18n-content="options_behavior_OnClick">
+              On click
+            </label>
             <div class="controls">
               <label class="radio">
                 <input type="radio" name="clickBehaviour" value="openPopup" ng-model="options.clickBehaviour">
-                open a popup
+                <span i18n-content="options_behavior_OnClickPopup">
+                  open a popup
+                </span>
               </label>
               <label class="radio">
                 <input type="radio" name="clickBehaviour" value="openReader" ng-model="options.clickBehaviour">
-                open Google Reader
+                <span i18n-content="options_behavior_OnClickReader">
+                  open Google Reader
+                </span>
               </label>
             </div>
           </div>
@@ -70,28 +86,38 @@
 
         <fieldset>
 
-          <legend>Icon</legend>
+          <legend i18n-content="options_icon_Title">Icon</legend>
 
           <div class="control-group">
-            <label class="control-label">Animate</label>
+            <label class="control-label" i18n-content="options_icon_Animate">
+              Animate
+            </label>
             <div class="controls">
               <label class="checkbox">
                 <input type="checkbox" ng-model="options.doAnimation" id="animate-icon"/>
-                Use an animation to indicate new items have arrived.
+                <span i18n-content="options_icon_AnimateMsg">
+                  Use an animation to indicate new items have arrived.
+                </span>
               </label>
             </div>
           </div>
 
           <div class="control-group">
-            <label class="control-label">Color</label>
+            <label class="control-label" i18n-content="options_icon_Color">
+              Color
+            </label>
             <div class="controls">
               <label class="input">
                 <input type="color"  class="input-mini" ng-model="options.colorNoUnread"/>
-                When the reading list has no unread items.
+                <span i18n-content="options_icon_ColorNoUnreadMsg">
+                  When the reading list has no unread items.
+                </span>                
               </label>
               <label class="input">
                 <input type="color"  class="input-mini" ng-model="options.colorUnread"/>
-                When the reading list has unread items.
+                <span i18n-content="options_icon_ColorUnreadMsg">
+                  When the reading list has unread items.
+                </span>                
               </label>
             </div>
           </div>

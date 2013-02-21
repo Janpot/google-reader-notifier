@@ -31,9 +31,18 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ##Contributions
-I'm happy to accept bug fixes. I can't promise to accept new features.
+
+I'm happy to accept bug fixes and translations. I can't promise to accept new features.
+
+##Translating this extension in your own language
+
+Copy [messages.json](https://github.com/Janpotoms/google-reader-notifier/blob/master/app/_locales/en/messages.json) and translate the messages. Put it in a folder with the name of your locale and create a pull request for it.
 
 ##version history
+
+###2.1.14: Ola mundo!
+  * Prepare extension for multiple locales
+  * Translate to dutch
 
 ###2.1.13: Load all the items
   * Fix issue to load extra items when marking as read in unread list.

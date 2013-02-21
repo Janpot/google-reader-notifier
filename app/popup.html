@@ -61,7 +61,7 @@
             <span class="grn-star" ng-class="{'grn-starred': item.starred}" ng-click="rate(item)"></span>
             <div class="grn-click-target" ng-click="showItemView(item)">
               <span class="grn-item-content" title="{{item.title}}">
-                <a class="grn-item-title" middle-click="openInChrome(item)">{{item.title}}</a>
+                <a class="grn-item-title" href="" middle-click="openInChrome(item)">{{item.title}}</a>
                 {{item.snippet}}
               </span>
               <span class="grn-item-origin" middle-click="openUrl(item.origin.url, true)" i18n-content="popup_OriginText">

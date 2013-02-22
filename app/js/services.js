@@ -183,6 +183,15 @@ services.factory('reader', function ($rootScope, $http, $q) {
   Item.prototype.getSummary = function () {
     return this.origin.title + ': ' + this.title;
   };
+  
+  Item.prototype.loadImages = function () {
+    var imageMatcher = /<img[^>]* src=\"([^\"]*)\"/g;
+    var match = null;
+    while (match = imageMatcher.exec(this.content)) {
+      var image = document.createElement('img');
+      image.src = match[1];
+    }    
+  };
 
   var List = function (url, params) {
     this.url = url;
@@ -253,6 +262,16 @@ services.factory('reader', function ($rootScope, $http, $q) {
     } else {
       this.current = null;
     }
+    
+    // preload next and previous items' images
+    var next = this.getNext();
+    if (next) {
+      next.loadImages();
+    }
+    var previous = this.getPrevious();
+    if (previous) {
+      previous.loadImages();
+    }
   };
 
   ListIterator.prototype.getNext = function () {
@@ -267,10 +286,20 @@ services.factory('reader', function ($rootScope, $http, $q) {
 
   ListIterator.prototype.moveNext = function () {
     this.current = this.getNext();
+    // preload next items images
+    var next = this.getNext();
+    if (next) {
+      next.loadImages();
+    }
   };
 
   ListIterator.prototype.movePrevious = function () {
     this.current = this.getPrevious();
+    // preload previous items images
+    var previous = this.getPrevious();
+    if (previous) {
+      previous.loadImages();
+    }
   };
 
   List.prototype.markAllAsRead = function () {

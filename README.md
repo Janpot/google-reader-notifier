@@ -40,6 +40,10 @@ Copy [messages.json](https://github.com/Janpotoms/google-reader-notifier/blob/ma
 
 ##version history
 
+###2.1.15-16
+  * Upgrade Angularjs
+  * Faster loading by downloading images in advance
+
 ###2.1.14: Ola mundo!
   * Prepare extension for multiple locales
   * Translate to dutch

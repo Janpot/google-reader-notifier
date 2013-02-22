@@ -99,7 +99,7 @@ angular.module('Reader.directives', [])
       restrict: 'A',
       link: function(scope, element, attr) {
         var scrollItems = function (n) {
-          var items = element.find(selector)
+          var items = element.find(attr.scrollNice)
                              .filter(function(index, element) {
                                return element.style.display != 'none'
                              });

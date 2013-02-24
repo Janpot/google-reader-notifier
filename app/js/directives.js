@@ -9,17 +9,22 @@ angular.module('Reader.directives', [])
         if (!canLoadMore(scope)) {
           return;
         }
-        if (raw.scrollTop + raw.offsetHeight + 200 >= raw.scrollHeight) {
+        if (raw.offsetHeight == 0) {
+          return;
+        }
+        if (-raw.scrollTop + raw.scrollHeight <= raw.offsetHeight + 200) {
           scope.$apply(attr.onLoadMore);
         }
       };
 
       elm.bind('scroll', ensureItems);
-
+      
+      
       window.MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
       var observer = new window.MutationObserver(ensureItems);
       observer.observe(raw,{ childList: true, subtree: true });
-
+      
+      
       scope.$on('$destroy', function () {
         console.log('destroy');
         observer.disconnect();

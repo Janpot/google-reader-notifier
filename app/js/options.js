@@ -11,6 +11,7 @@
     colorUnread: '#980010',
     colorNoUnread: '#686868',
     clickBehaviour: clickBehaviours.openPopup,
+    showNotification: true,
     defaultList: 'all'
   };
 

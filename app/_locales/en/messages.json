@@ -92,6 +92,12 @@
   "options_behavior_OnClickReader": {
     "message": "open Google Reader"
   },
+  "options_behavior_showNotification": {
+    "message": "Notification"
+  },
+  "options_behavior_showNotificationMsg": {
+    "message": "Show a desktop notification when new items arrive."
+  },
   
   "options_icon_Title": {
     "message": "Icon"

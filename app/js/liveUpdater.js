@@ -23,7 +23,4 @@ if (newItemCountLabel) {
   window.MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
   var observer = new MutationObserver(requestUpdate);
   observer.observe(newItemCountLabel, { attributes: true, characterData: true });
-
-  //newItemCountLabel.addEventListener('DOMCharacterDataModified', requestUpdate, true);
-  //requestUpdate();
 }

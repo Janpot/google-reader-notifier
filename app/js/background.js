@@ -1,11 +1,5 @@
 var Event = function () {
-  var listeners = [];
-};
-
-Event.prototype.fire = function (scope, args) {
-  this.listeners.forEach(function (listener) {
-    listener.apply(scope || window, args);
-  });
+  this.listeners = [];
 };
 
 Event.prototype.subscribe = function (listener) {
@@ -18,17 +12,28 @@ Event.prototype.unSubscribe = function (toRemove) {
   });
 };
 
+var Emitter = function () {
+  this.event = new Event();
+};
+
+Emitter.prototype.fire = function (scope) {
+  var args = arguments.splice(1);
+  this.event.listeners.forEach(function (listener) {
+    listener.apply(scope || window, args);
+  });
+};
+
 var poller = (function () {
   
   var unreadCount = 0;
   var refeshTimer = null;  
   var readingListMatcher = /user\/[\\d]+\/state\/com.google\/reading-list/;
   
-  var onUnreadCountChanged = new Event();
+  var unreadCountChange = new Emitter();
   
   var onUnreadCountUpdated = function (count) {
     if (count !== unreadCount) {
-      onUnreadCountChanged.fire(window, unreadCount, count);
+      unreadCountChange.fire(window, unreadCount, count);
       unreadCount = count;
     }
   };
@@ -41,6 +46,16 @@ var poller = (function () {
         return;
       }
     }
+  };
+  
+  var getUnreadCount = function (onSuccess, onError) {
+    return http.getJson('https://www.google.com/reader/api/0/unread-count', {
+      params: {
+        output: 'json',
+        ck: Date.now(),
+        client: 'notifier'
+      }
+    }, onSuccess, onError)
   };
   
   var refresh = function () {
@@ -61,7 +76,7 @@ var poller = (function () {
   
   return {
     setUpdateInterval: setUpdateInterval,
-    onUnreadCountChanged: onUnreadCountChanged
+    onUnreadCountChanged: unreadCountChange.event
   };
   
 }());

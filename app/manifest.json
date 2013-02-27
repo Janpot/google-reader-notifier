@@ -39,6 +39,7 @@
     "alarms",
     "storage",
     "tabs",
-    "https://www.google.com/reader/"
+    "https://www.google.com/reader/",
+    "notifications"
   ]
 }

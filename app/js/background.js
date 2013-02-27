@@ -31,19 +31,45 @@ var refreshUnreadCount = function () {
       found = isReadingList(response.unreadcounts[i].id)
       if (found) {
 
-        browserAction.setUnreadCount(response.unreadcounts[i].count);
+        setExtensionUnreadCount(response.unreadcounts[i].count);
         break;
       }
     }
 
     if (!found) {
-      browserAction.setUnreadCount(0);
+      setExtensionUnreadCount(0);
     }
   };
 
   getUnreadCount(handleSuccess, function onError() {
     console.error('error getting unread count');
   });
+};
+
+var prevCount = 0;
+var notificationOpen = false;
+
+var setExtensionUnreadCount = function (count) {
+  browserAction.setUnreadCount(count);
+  
+  if (count > prevCount && !notificationOpen) {    
+    notificationOpen = true;
+    
+    var notification = webkitNotifications.createNotification(
+      '',
+      'New items',
+      'There are new items in your reading list'
+    );
+    notification.onclose = function () {
+      notificationOpen = false;
+    };
+    
+    notification.show();
+    // var notification = webkitNotifications.createHTMLNotification('notification.html');
+  }
+
+  prevCount = count;
+
 };
 
 var updateIntervalId;
@@ -128,7 +154,7 @@ chrome.extension.onMessage.addListener(
     if(request.method === 'updateUnreadCount') {
       console.log('update request received', request);
       if(request.count) {
-        browserAction.setUnreadCount(request.count);
+        setExtensionUnreadCount(request.count);
       } else {
         refreshUnreadCount();
       }

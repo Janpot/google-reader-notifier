@@ -1,3 +1,71 @@
+var Event = function () {
+  var listeners = [];
+};
+
+Event.prototype.fire = function (scope, args) {
+  this.listeners.forEach(function (listener) {
+    listener.apply(scope || window, args);
+  });
+};
+
+Event.prototype.subscribe = function (listener) {
+  this.listeners.push(listener);
+};
+
+Event.prototype.unSubscribe = function (toRemove) {
+  this.listeners = this.listeners.filter(function (listener) {
+    return listener !== toRemove;
+  });
+};
+
+var poller = (function () {
+  
+  var unreadCount = 0;
+  var refeshTimer = null;  
+  var readingListMatcher = /user\/[\\d]+\/state\/com.google\/reading-list/;
+  
+  var onUnreadCountChanged = new Event();
+  
+  var onUnreadCountUpdated = function (count) {
+    if (count !== unreadCount) {
+      onUnreadCountChanged.fire(window, unreadCount, count);
+      unreadCount = count;
+    }
+  };
+  
+  var onReadingListReceived = function (readingList) {
+    // search through all unreadcounts for the reading list.
+    for (var i = 0; i < readingList.unreadcounts.length; i++) {
+      if (readingListMatcher.test(readingList.unreadcounts[i].id)) {
+        onUnreadCountUpdated(readingList.unreadcounts[i].count);
+        return;
+      }
+    }
+  };
+  
+  var refresh = function () {
+    console.log('refereshing...');
+    getUnreadCount(onReadingListReceived, function onError() {
+      console.error('error getting unread count');
+    });
+  };
+  
+  var setUpdateInterval = function (interval) {
+    var period = interval * 60 *1000; // minutes to ms
+    clearInterval(refeshTimer);    
+    refeshTimer = setInterval(refresh, period);
+    refresh()
+  };
+  
+  setUpdateInterval(5);
+  
+  return {
+    setUpdateInterval: setUpdateInterval,
+    onUnreadCountChanged: onUnreadCountChanged
+  };
+  
+}());
+
 
 var getUnreadCount = function (onSuccess, onError) {
   return http.getJson('https://www.google.com/reader/api/0/unread-count', {
@@ -8,20 +76,19 @@ var getUnreadCount = function (onSuccess, onError) {
     }
   }, onSuccess, onError)
 };
-
+  
 
 var makeTagComparer = function (tag) {
   var matcher = new RegExp('user/[\\d]+/state/com.google/' + tag);
   return function (string) {
     return matcher.test(string);
-  };
-      
+  };      
 };
 
 var refreshUnreadCount = function () {
   console.log('refereshing...');
   var handleSuccess = function (response) {
-    // make a function to check wether a certain string represents the tag 'reading-list'.
+    // make a function to check whether a certain string represents the tag 'reading-list'.
     var isReadingList = makeTagComparer('reading-list');
 
     var found = false;

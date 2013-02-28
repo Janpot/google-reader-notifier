@@ -4,6 +4,7 @@
   "main": "./path/to/main.css",
   "dependencies": {
     "jquery": "*",
-    "bootstrap": "*"
+    "angular": "*",
+    "angular-sanitize": "*"
   }
 }

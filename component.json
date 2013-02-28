@@ -5,6 +5,7 @@
   "dependencies": {
     "jquery": "*",
     "angular": "*",
-    "angular-sanitize": "*"
+    "angular-sanitize": "*",
+    "bootstrap": "http://twitter.github.com/bootstrap/assets/bootstrap.zip"    
   }
 }

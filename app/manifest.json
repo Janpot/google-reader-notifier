@@ -20,6 +20,7 @@
     "scripts": [
       "js/options.js",
       "js/http.js",
+      "js/poller.js",
       "js/BrowserAction.js",
       "js/background.js"
     ],

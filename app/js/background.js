@@ -1,140 +1,10 @@
-var Event = function () {
-  this.listeners = [];
-};
-
-Event.prototype.subscribe = function (listener) {
-  this.listeners.push(listener);
-};
-
-Event.prototype.unSubscribe = function (toRemove) {
-  this.listeners = this.listeners.filter(function (listener) {
-    return listener !== toRemove;
-  });
-};
-
-var Emitter = function () {
-  this.event = new Event();
-};
-
-Emitter.prototype.fire = function (scope) {
-  var args = arguments.splice(1);
-  this.event.listeners.forEach(function (listener) {
-    listener.apply(scope || window, args);
-  });
-};
-
-var poller = (function () {
-  
-  var unreadCount = 0;
-  var refeshTimer = null;  
-  var readingListMatcher = /user\/[\\d]+\/state\/com.google\/reading-list/;
-  
-  var unreadCountChange = new Emitter();
-  
-  var onUnreadCountUpdated = function (count) {
-    if (count !== unreadCount) {
-      unreadCountChange.fire(window, unreadCount, count);
-      unreadCount = count;
-    }
-  };
-  
-  var onReadingListReceived = function (readingList) {
-    // search through all unreadcounts for the reading list.
-    for (var i = 0; i < readingList.unreadcounts.length; i++) {
-      if (readingListMatcher.test(readingList.unreadcounts[i].id)) {
-        onUnreadCountUpdated(readingList.unreadcounts[i].count);
-        return;
-      }
-    }
-  };
-  
-  var getUnreadCount = function (onSuccess, onError) {
-    return http.getJson('https://www.google.com/reader/api/0/unread-count', {
-      params: {
-        output: 'json',
-        ck: Date.now(),
-        client: 'notifier'
-      }
-    }, onSuccess, onError)
-  };
-  
-  var refresh = function () {
-    console.log('refereshing...');
-    getUnreadCount(onReadingListReceived, function onError() {
-      console.error('error getting unread count');
-    });
-  };
-  
-  var setUpdateInterval = function (interval) {
-    var period = interval * 60 *1000; // minutes to ms
-    clearInterval(refeshTimer);    
-    refeshTimer = setInterval(refresh, period);
-    refresh()
-  };
-  
-  setUpdateInterval(5);
-  
-  return {
-    setUpdateInterval: setUpdateInterval,
-    onUnreadCountChanged: unreadCountChange.event
-  };
-  
-}());
-
-
-var getUnreadCount = function (onSuccess, onError) {
-  return http.getJson('https://www.google.com/reader/api/0/unread-count', {
-    params: {
-      output: 'json',
-      ck: Date.now(),
-      client: 'notifier'
-    }
-  }, onSuccess, onError)
-};
-  
-
-var makeTagComparer = function (tag) {
-  var matcher = new RegExp('user/[\\d]+/state/com.google/' + tag);
-  return function (string) {
-    return matcher.test(string);
-  };      
-};
-
-var refreshUnreadCount = function () {
-  console.log('refereshing...');
-  var handleSuccess = function (response) {
-    // make a function to check whether a certain string represents the tag 'reading-list'.
-    var isReadingList = makeTagComparer('reading-list');
-
-    var found = false;
-    // search through all unreadcounts for the reading list.
-
-    for (var i = 0; i < response.unreadcounts.length; i++) {
-      found = isReadingList(response.unreadcounts[i].id)
-      if (found) {
-
-        setExtensionUnreadCount(response.unreadcounts[i].count);
-        break;
-      }
-    }
-
-    if (!found) {
-      setExtensionUnreadCount(0);
-    }
-  };
-
-  getUnreadCount(handleSuccess, function onError() {
-    console.error('error getting unread count');
-  });
-};
-
-var prevCount = 0;
 var notificationOpen = false;
 
-var setExtensionUnreadCount = function (count) {
-  browserAction.setUnreadCount(count);
+
+var setExtensionUnreadCount = function (oldCount, newCount) {
+  browserAction.setUnreadCount(newCount);
   
-  if (count > prevCount && !notificationOpen) {    
+  if (newCount > oldCount && !notificationOpen) {    
     notificationOpen = true;
     
     var notification = webkitNotifications.createNotification(
@@ -142,29 +12,20 @@ var setExtensionUnreadCount = function (count) {
       'New items',
       'There are new items in your reading list'
     );
+    
     notification.onclose = function () {
       notificationOpen = false;
     };
     
     notification.show();
-    // var notification = webkitNotifications.createHTMLNotification('notification.html');
   }
-
-  prevCount = count;
 
 };
 
-var updateIntervalId;
+poller.onUnreadCountChanged.subscribe(setExtensionUnreadCount);
 
-var setUpdateInterval = function (interval) {
-  console.log('interval is now ' + interval + ' minutes');
-  if (updateIntervalId) {
-    clearInterval(updateIntervalId)
-  }
-  var period = interval * 60 *1000; // minutes to ms
-  updateIntervalId = setInterval(refreshUnreadCount, period);
-  refreshUnreadCount();
-};
+
+
 
 var parseColor = function (hex) {
   var match = /^#([0-9A-Fa-f])([0-9A-Fa-f])([0-9A-Fa-f])$/.exec(hex);
@@ -192,17 +53,21 @@ var parseColor = function (hex) {
 options.get(function (values) {
   var unreadColor = parseColor(values.colorUnread);
   browserAction.setUnreadColor(unreadColor);
+  
   var noUnreadColor = parseColor(values.colorNoUnread);
   browserAction.setNoUnreadColor(noUnreadColor);
+  
   browserAction.setDoAnimation(values.doAnimation);
-  setUpdateInterval(values.updateInterval);
   setClickBehaviour(values.clickBehaviour);
+  
+  // kick off polling with the configured interval
+  poller.refresh(values.updateInterval);
 });
 
 options.onChange(function (changes) {
-  console.log(changes);
+
   if (changes.updateInterval) {
-    setUpdateInterval(changes.updateInterval.newValue);
+    poller.refresh(changes.updateInterval.newValue);
   }
 
   if (changes.colorUnread) {
@@ -238,7 +103,7 @@ chrome.extension.onMessage.addListener(
       if(request.count) {
         setExtensionUnreadCount(request.count);
       } else {
-        refreshUnreadCount();
+        poller.refresh();
       }
     }
     sendResponse({});
@@ -262,7 +127,7 @@ function getReaderTab(callback) {
 };
 
 function onOpenReaderMouseClick() {
-  refreshUnreadCount();
+  poller.refresh();
   getReaderTab(function(tab) {
     if (tab) {
       // Try to reuse an existing Reader tab

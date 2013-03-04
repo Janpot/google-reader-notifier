@@ -13,11 +13,22 @@ var setExtensionUnreadCount = function (oldCount, newCount) {
       'There are new items in your reading list'
     );
     
+    var closeTimer = setTimeout(function () {
+      notification.close();
+    }, 10000);
+    
     notification.onclose = function () {
       notificationOpen = false;
+      clearTimeout(closeTimer);
+    };
+    
+    notification.onclick = function () {
+      notification.close();
+      clearTimeout(closeTimer);
     };
     
     notification.show();
+    console.log(notification)
   }
 
 };

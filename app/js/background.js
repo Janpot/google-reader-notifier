@@ -1,34 +1,43 @@
 var notificationOpen = false;
 
+var notify = function () {
+  if (notificationOpen) {
+    return;
+  }
+  
+  options.get(function (values) {
+    if (values.showNotification) {      
+      var notification = webkitNotifications.createNotification(
+        '',
+        'New items',
+        'There are new items in your reading list'
+      );
+      
+      var closeTimer = setTimeout(function () {
+        notification.close();
+      }, 10000);
+      
+      notification.onclose = function () {
+        notificationOpen = false;
+        clearTimeout(closeTimer);
+      };
+      
+      notification.onclick = function () {
+        notification.close();
+        clearTimeout(closeTimer);
+      };
+      
+      notification.show();
+      notificationOpen = true;
+    }
+  });
+};
 
 var setExtensionUnreadCount = function (oldCount, newCount) {
   browserAction.setUnreadCount(newCount);
   
-  if (newCount > oldCount && !notificationOpen) {    
-    notificationOpen = true;
-    
-    var notification = webkitNotifications.createNotification(
-      '',
-      'New items',
-      'There are new items in your reading list'
-    );
-    
-    var closeTimer = setTimeout(function () {
-      notification.close();
-    }, 10000);
-    
-    notification.onclose = function () {
-      notificationOpen = false;
-      clearTimeout(closeTimer);
-    };
-    
-    notification.onclick = function () {
-      notification.close();
-      clearTimeout(closeTimer);
-    };
-    
-    notification.show();
-    console.log(notification)
+  if (newCount > oldCount) {    
+    notify();
   }
 
 };

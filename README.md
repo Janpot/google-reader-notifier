@@ -19,6 +19,7 @@ Supports:
   * [AngularJS](http://angularjs.org/)
   * [Bootstrap](http://twitter.github.com/bootstrap/)
   * [Font Awesome](http://fortawesome.github.com/Font-Awesome/)
+  * [jQuery](http://jquery.com/)
 
 ##License
 

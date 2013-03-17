@@ -27,7 +27,7 @@ angular.module('Reader.services.lists', ['Reader.services.reader'])
       return raw.categories ? raw.categories.some(function matches(category) {
         return categoryMatcher.test(category);
       }) : false;
-    }
+    };
   
     var Item = function (raw) {
     // extract the content
@@ -46,7 +46,7 @@ angular.module('Reader.services.lists', ['Reader.services.reader'])
       // create a viewmodel
       this.title = raw.title ? normalize(raw.title) : '(title unknown)';
   
-      this.url = ''
+      this.url = '';
       if (raw.alternate && raw.alternate[0] && raw.alternate[0].href) {
         this.url = raw.alternate[0].href;
       }

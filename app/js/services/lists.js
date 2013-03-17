@@ -1,6 +1,6 @@
-angular.module('Reader.services.list', ['Reader.services.reader'])
-  .factory('list', function ($q, reader) {
-  
+angular.module('Reader.services.lists', ['Reader.services.reader'])
+  .factory('Item', function(reader) {
+    
     var normalize = function (str) {
       str = str || '';
       var subs = {
@@ -142,6 +142,13 @@ angular.module('Reader.services.list', ['Reader.services.reader'])
         image.src = match[1];
       }    
     };
+    
+    return Item;
+  
+  })
+
+
+  .factory('List', function ($q, reader, Item) {
   
     var List = function (config) {
       this.config = config;
@@ -264,6 +271,10 @@ angular.module('Reader.services.list', ['Reader.services.reader'])
     };
   
   
+    return List;
+  })
+
+  .factory('lists', function (List, reader) {
     return {
       getReadingList: function (n) {
         return new List(reader.lists.READING_LIST);

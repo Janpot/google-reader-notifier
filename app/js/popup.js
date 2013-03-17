@@ -1,10 +1,9 @@
 'use strict';
 
-angular.module('Reader.popup', ['Reader.services.list', 'Reader.services.options', 'Reader.directives', 'Reader.filters', 'ngSanitize']);
+angular.module('Reader.popup', ['Reader.services.lists', 'Reader.services.options', 'Reader.directives', 'Reader.filters', 'ngSanitize']);
 
-function PopupCtrl($scope, $filter, list, options) {
-  var reader = list;
-
+function PopupCtrl($scope, $filter, lists, options) {
+  
   $scope.openUrl = function (url, background) {
     // TODO: move this to a shared lib (for directive)
     if (/^https?:\/\//i.test(url)) {
@@ -27,12 +26,12 @@ function PopupCtrl($scope, $filter, list, options) {
 
     all: {
       name: 'all',
-      list: reader.getReadingList()
+      list: lists.getReadingList()
     },
 
     unread: {
       name: 'unread',
-      list: reader.getUnreadList(),
+      list: lists.getUnreadList(),
       filter: {
         read: false
       }
@@ -40,7 +39,7 @@ function PopupCtrl($scope, $filter, list, options) {
 
     starred: {
       name: 'starred',
-      list: reader.getStarredList(),
+      list: lists.getStarredList(),
       filter: {
         starred: true
       }

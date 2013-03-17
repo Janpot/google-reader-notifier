@@ -32,6 +32,22 @@ angular.module('Reader.directives', [])
     };
   })
 
+  .directive('onMousewheel', function($parse) {
+    return function(scope, elm, attr) {
+      var fn = $parse(attr.onMousewheel);
+      console.log(fn);
+      elm.bind('mousewheel', function (event) {
+        scope.$apply(function() {
+          return fn(scope, {
+            deltaX: event.originalEvent.wheelDeltaX / 120, 
+            deltaY: event.originalEvent.wheelDeltaY / 120, 
+            $event: event
+          });
+        });
+      });
+    };
+  })
+
   .directive('a', function() {
     var openUrl = function (url, background) {
       var tab = {url: url};

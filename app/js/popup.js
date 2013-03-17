@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('Reader.popup', ['Reader.services', 'Reader.directives', 'Reader.filters', 'ngSanitize']);
+angular.module('Reader.popup', ['Reader.services.list', 'Reader.services.options', 'Reader.directives', 'Reader.filters', 'ngSanitize']);
 
-function PopupCtrl($scope, $filter, reader, options) {
-
+function PopupCtrl($scope, $filter, list, options) {
+  var reader = list;
 
   $scope.openUrl = function (url, background) {
     // TODO: move this to a shared lib (for directive)

@@ -55,16 +55,16 @@ function PopupCtrl($scope, $filter, lists, options) {
   $scope.showItemView = function (item) {
     $scope.iterator = $scope.reader.list.getIterator(item);
     analytics.itemViewedIn($scope.iterator.current, analytics.views.popup);
-    if (!$scope.iterator.current.keptUnread) {
-      $scope.iterator.current.markAsRead();
+    if (!$scope.iterator.current.isKeptUnread()) {
+      $scope.markAsRead($scope.iterator.current);
     }
     $scope.view = $scope.views.item;
   };
 
   $scope.openInChrome = function (item) {
     analytics.itemViewedIn(item, analytics.views.tab);
-    if (!item.keptUnread) {
-      item.markAsRead();
+    if (!item.isKeptUnread()) {
+      $scope.markAsRead(item);
     }
     $scope.openUrl(item.url, true);
     return false;
@@ -77,8 +77,8 @@ function PopupCtrl($scope, $filter, lists, options) {
   $scope.showNextItem = function () {
     $scope.iterator.moveNext();
     analytics.itemViewedIn($scope.iterator.current, analytics.views.popup);
-    if (!$scope.iterator.current.keptUnread) {
-      $scope.iterator.current.markAsRead();
+    if (!$scope.iterator.current.isKeptUnread()) {
+      $scope.markAsRead($scope.iterator.current);
     }
     if (!$scope.iterator.getNext() && $scope.reader.list.canLoadMore()) {
       $scope.reader.list.loadItems(10);
@@ -88,16 +88,23 @@ function PopupCtrl($scope, $filter, lists, options) {
   $scope.showPreviousItem = function () {
     $scope.iterator.movePrevious();
     analytics.itemViewedIn($scope.iterator.current, analytics.views.popup);
-    if (!$scope.iterator.current.keptUnread) {
-      $scope.iterator.current.markAsRead();
+    if (!$scope.iterator.current.isKeptUnread()) {
+      $scope.iterator.current.isKeptUnread();
     }
   };
 
   $scope.refresh = function () {
+    $scope.loadingItems = true;
+    $scope.refreshing = true;
     $scope.error = null;
-    $scope.reader.list.loadItems(20, true).then(null, function onError (error) {
+    $scope.reader.list.loadItems(20, true).then(function onSuccess() {
+      $scope.loadingItems = false;
+      $scope.refreshing = false;
+    }, function onError (error) {
       $scope.error = error;
-      chrome.extension.sendMessage({ method: "updateUnreadCount" });
+      $scope.loadingItems = false;
+      $scope.refreshing = false;
+      chrome.extension.sendMessage({ method: "updateUnreadCount" });      
     });
   };
 
@@ -111,14 +118,21 @@ function PopupCtrl($scope, $filter, lists, options) {
     options.set({ defaultList: $scope.reader.name });
     $scope.refresh();
   };
-
-  $scope.loadMoreItems = function () {
-    $scope.reader.list.loadItems(10);
-    return true;
+  
+  var updateUnreadCount = function () {
+    chrome.extension.sendMessage({ method: "updateUnreadCount" });
+  };
+  
+  $scope.markAsRead = function (item) {
+    item.markAsRead().then(updateUnreadCount);
+  };
+  
+  $scope.keepUnread = function (item) {
+    item.keepUnread().then(updateUnreadCount);
   };
 
   $scope.rate = function (item) {
-    if (item.starred) {
+    if (item.isStarred()) {
       item.unStar();
     } else {
       item.star();
@@ -126,10 +140,10 @@ function PopupCtrl($scope, $filter, lists, options) {
   };
 
   $scope.toggleKeepUnread = function (item) {
-    if (item.keptUnread) {
-      item.markAsRead();
+    if (item.isKeptUnread()) {
+      $scope.markAsRead(item);
     } else {
-      item.keepUnread();
+      $scope.keepUnread(item);
     }
   };
 
@@ -152,5 +166,63 @@ function PopupCtrl($scope, $filter, lists, options) {
     $scope.reader = getReaderByName(values.defaultList);
     $scope.refresh();
   });
+  
+  
+  
+  
+  
+  var NUMBER_OF_SCREENITEMS = 7;
+  var START_PRELOAD_OFFSET = 5;
+  var firstItemIndex = 0;
+  
+  $scope.loadingItems = true;
+  
+  var requestMoreItems = function () {
+    if (!$scope.loadingItems && $scope.reader.list.canLoadMore()) {
+      $scope.loadingItems = true;
+      $scope.reader.list.loadItems(20).then(
+        function onSuccess() {
+          $scope.loadingItems = false;
+        }, 
+        function onError(error) {
+          $scope.error = error;
+          $scope.loadingItems = false;
+        }
+      );
+    }
+  };
+  
+  var screenItems = [];
+  
+  $scope.getScreenItems = function () {
+    var list = $scope.reader.list;
+    firstItemIndex = Math.max(firstItemIndex, 0);
+    var lastItemIndex = firstItemIndex + NUMBER_OF_SCREENITEMS;
+    var overflow = lastItemIndex - list.items.length;
+    
+    if (overflow > 0) {
+      lastItemIndex = list.items.length;
+      firstItemIndex = Math.max(firstItemIndex - overflow, 0);      
+    }
+    
+    if (overflow + START_PRELOAD_OFFSET > 0) {
+      requestMoreItems();
+    }
+    
+
+    return list.items.slice(firstItemIndex, lastItemIndex);
+  };
+  
+  $scope.offsetItems = function (delta) {
+    firstItemIndex -= Math.round(delta);    
+  };
+  
+  $scope.noMorePrevious = function () {
+    return firstItemIndex <= 0;
+  };
+  
+  $scope.noMoreNext = function () {
+    return firstItemIndex + NUMBER_OF_SCREENITEMS >= $scope.reader.list.items.length && !$scope.reader.list.canLoadMore();
+  };
 
 };

@@ -3,13 +3,25 @@ angular.module('Reader.services.reader', [])
     
     var service = { };
     
+    var tagSuffixes = {
+      READ: 'read',
+      STARRED: 'starred',
+      KEPT_UNREAD: 'kept-unread',
+      FRESH: 'fresh',
+      READING_LIST: 'reading-list'
+    };
+    
     var TAG_BASE = 'user/-/state/com.google/';  
-    service.tags = {
-      READ: TAG_BASE + 'read',
-      STARRED: TAG_BASE + 'starred',
-      KEPT_UNREAD: TAG_BASE + 'kept-unread',
-      FRESH: TAG_BASE + 'fresh',
-      READING_LIST: TAG_BASE + 'reading-list'
+    service.tags = {};
+    var matchers = {};
+    for (var key in tagSuffixes) {
+      var tag = TAG_BASE + tagSuffixes[key];
+      service.tags[key] = tag
+      matchers[tag] = new RegExp('^user\\/[^\/]+\\/state\\/com.google\\/' + tagSuffixes[key] + '$')
+    }
+    
+    service.matcherForTag = function (tag) {
+      return matchers[tag];
     };
     
     // urls
@@ -19,20 +31,8 @@ angular.module('Reader.services.reader', [])
         URL_MARK_ALL_AS_READ = URL_BASE + 'mark-all-as-read',
         URL_STREAM_CONTENTS = URL_BASE + 'stream/contents/';
     
-    
-    service.lists = {
-      READING_LIST: {
-        url: URL_STREAM_CONTENTS + service.tags.READING_LIST
-      },
-      UNREAD_LIST: {
-        url: URL_STREAM_CONTENTS + service.tags.READING_LIST,
-        params: {
-          xt: service.tags.READ
-        }
-      },
-      STARRED_LIST: {
-        url: URL_STREAM_CONTENTS + service.tags.STARRED
-      }
+    var constructListUrl = function (tag) {
+      return URL_STREAM_CONTENTS + tag;
     };
     
     var token;
@@ -96,11 +96,15 @@ angular.module('Reader.services.reader', [])
     };
     
     service.getList = function (config, count, continuation) {
-      var params = config.params || {};
+      var params = {};
       
       params.output = 'json';
       params.ck = Date.now();
       params.client = 'notifier';
+      
+      if (config.excludeTag) {
+        params.xt = config.excludeTag;
+      }
       
       if (count) {
         params.n = count
@@ -110,7 +114,9 @@ angular.module('Reader.services.reader', [])
         params.c = continuation
       }
       
-      return $http.get(config.url, {
+      var url = constructListUrl(config.tag);
+      
+      return $http.get(url, {
         params: params
       }).then(function (response) {
         return response.data;

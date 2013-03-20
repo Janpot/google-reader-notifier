@@ -129,7 +129,6 @@ body {
   max-height: 600px;
 
   header {
-    border-bottom: 1px solid #DDD;
     padding: 7px 9px 12px 7px;
 
 
@@ -146,14 +145,30 @@ body {
   .grn-container {
     .box-flex(1);
     overflow:auto;
+    -webkit-user-select: none;
 
     &:focus {
       outline: none;
     }
 
-    .grn-loading {
+    .grn-refreshing {
       padding: 15px 0px;
       text-align: center;
+    }
+    
+    .grn-navigation {
+      
+      text-align: center;
+      cursor: pointer;
+      padding: 3px 0px;
+      
+      &:hover {
+        color: #980010;
+      }
+      
+      &.disabled {
+        color: #EEE;
+      }
     }
 
     .grn-items-list {

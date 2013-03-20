@@ -23,12 +23,6 @@ angular.module('Reader.services.lists', ['Reader.services.reader'])
       });
     };
   
-    var hasCategory = function (raw, categoryMatcher) {
-      return raw.categories ? raw.categories.some(function matches(category) {
-        return categoryMatcher.test(category);
-      }) : false;
-    };
-  
     var Item = function (raw) {
     // extract the content
       this.content = '';
@@ -57,76 +51,89 @@ angular.module('Reader.services.lists', ['Reader.services.reader'])
       } : undefined;
   
       this.author = raw.author;
+      this.categories = raw.categories || [];
   
-      this.read = hasCategory(raw, /^user\/[-\d]+\/state\/com\.google\/read$/);
-      this.starred = hasCategory(raw, /^user\/[-\d]+\/state\/com\.google\/starred$/);
       this.id = raw.id;
   
       if (raw.published) {
         this.time = new Date(raw.published * 1000);
       }
   
-      this.keptUnread = hasCategory(raw, /^user\/[-\d]+\/state\/com\.google\/kept-unread$/);
       this.readStateLocked = raw.isReadStateLocked || false;
+    };
+    
+    Item.prototype.addCategory = function (tag) {
+      if (tag && !this.hasCategory(tag)) {
+        this.categories.push(tag);
+      }
+    };
+    
+    Item.prototype.removeCategory = function (tag) {
+      if (tag && this.hasCategory(tag)) {
+        var categoryMatcher = reader.matcherForTag(tag);
+        this.categories = this.categories.filter(function matches(category) {
+          return !categoryMatcher.test(category);
+        });
+      }
+    };
+    
+    Item.prototype.hasCategory = function (tag) {
+      var categoryMatcher = reader.matcherForTag(tag);
+      return this.categories.some(function matches(category) {
+        return categoryMatcher.test(category);
+      });
+    };
+    
+    Item.prototype.editTag = function (cfg) {
+      var self = this;
+      this.addCategory(cfg.a);
+      this.removeCategory(cfg.r);
+      
+      return reader.editTag({
+        i: this.id,
+        a: cfg.a,
+        r: cfg.r
+      }).then(null, function onError() {
+        self.removeCategory(cfg.a);
+        self.addCategory(cfg.r);
+      });
+    }
+    
+    Item.prototype.isRead = function () {
+      return this.hasCategory(reader.tags.READ);
+    };
+    
+    Item.prototype.isKeptUnread = function () {
+      return this.hasCategory(reader.tags.KEPT_UNREAD);
+    };
+    
+    Item.prototype.isStarred = function () {
+      return this.hasCategory(reader.tags.STARRED);
     };
   
     Item.prototype.markAsRead = function () {
-      var readOld = this.read;
-      var keptUnreadOld = this.keptUnread;
-      this.read = true;
-      this.keptUnread = false;
-      self = this;
-      reader.editTag({
-        i: this.id,
-        a: 'user/-/state/com.google/read',
-        r: 'user/-/state/com.google/kept-unread'
-      }).then(function onSuccess() {
-        chrome.extension.sendMessage({ method: "updateUnreadCount" });
-      }, function onError() {
-        self.read = readOld;
-        self.keptUnread = keptUnreadOld;
+      return this.editTag({
+        a: reader.tags.READ,
+        r: reader.tags.KEPT_UNREAD
       });
     };
   
     Item.prototype.keepUnread = function () {
-      var readOld = this.read;
-      var keptUnreadOld = this.keptUnread;
-      this.read = false;
-      this.keptUnread = true;
-      self = this;
-      reader.editTag({
-        i: this.id,
-        a: 'user/-/state/com.google/kept-unread',
-        r: 'user/-/state/com.google/read'
-      }).then(function onSuccess() {
-        chrome.extension.sendMessage({ method: "updateUnreadCount" });
-      }, function onError() {
-        self.read = readOld;
-        self.keptUnread = keptUnreadOld;
+      return this.editTag({
+        a: reader.tags.KEPT_UNREAD,
+        r: reader.tags.READ
       });
     };
   
     Item.prototype.star = function () {
-      var oldValue = this.starred;
-      this.starred = true;
-      self = this;
-      reader.editTag({
-        i: this.id,
-        a: 'user/-/state/com.google/starred'
-      }).then(null, function onError() {
-        self.starred = oldValue;
+      return this.editTag({
+        a: reader.tags.STARRED
       });
     };
   
     Item.prototype.unStar = function () {
-      var oldValue = this.starred;
-      this.starred = false;
-      self = this;
-      reader.editTag({
-        i: this.id,
-        r: 'user/-/state/com.google/starred'
-      }).then(null, function onError() {
-        self.starred = oldValue;
+      return this.editTag({
+        r: reader.tags.STARRED
       });
     };
   
@@ -186,7 +193,7 @@ angular.module('Reader.services.lists', ['Reader.services.reader'])
           }
         );
       } else {
-        deferred.reject('Failed to load items');
+        deferred.reject('Already loading new items');
       }
   
       return deferred.promise;
@@ -255,10 +262,12 @@ angular.module('Reader.services.lists', ['Reader.services.reader'])
     List.prototype.markAllAsRead = function () {
       var self = this;
       var markAllAsReadLocal = function () {
+        // TODO: move this out of here (to the controller)
         chrome.extension.sendMessage({ method: "updateUnreadCount" });
+        
         self.items.forEach(function (item) {
-          item.read = true;
-          item.keptUnread = false;
+          item.addCategory(reader.tags.READ);
+          item.removeCategory(reader.tags.KEPT_UNREAD);
           item.readStateLocked = true;
         });
       };
@@ -277,15 +286,22 @@ angular.module('Reader.services.lists', ['Reader.services.reader'])
   .factory('lists', function (List, reader) {
     return {
       getReadingList: function (n) {
-        return new List(reader.lists.READING_LIST);
+        return new List({
+          tag: reader.tags.READING_LIST
+        });
       },
   
       getUnreadList: function (n) {
-        return new List(reader.lists.UNREAD_LIST);
+        return new List({
+          tag: reader.tags.READING_LIST,
+          excludeTag: reader.tags.READ
+        });
       },
   
       getStarredList: function (n) {
-        return new List(reader.lists.STARRED_LIST);
+        return new List({
+          tag: reader.tags.STARRED
+        });
       }
     };
   });

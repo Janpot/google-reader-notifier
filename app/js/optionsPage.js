@@ -1,7 +1,7 @@
 'use strict';
 
 
-angular.module('Reader.optionsPage', ['Reader.services', 'Reader.directives']);
+angular.module('Reader.optionsPage', ['Reader.services.options', 'Reader.directives']);
 
 
 function OptionsCtrl($scope, options) {

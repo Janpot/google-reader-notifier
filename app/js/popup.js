@@ -89,7 +89,7 @@ function PopupCtrl($scope, $filter, lists, options) {
     $scope.iterator.movePrevious();
     analytics.itemViewedIn($scope.iterator.current, analytics.views.popup);
     if (!$scope.iterator.current.isKeptUnread()) {
-      $scope.iterator.current.isKeptUnread();
+      $scope.markAsRead($scope.iterator.current);
     }
   };
 

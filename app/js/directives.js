@@ -82,8 +82,8 @@ angular.module('Reader.directives', [])
       link: function(scope, element, attr) {
         element.addClass('ng-binding').data('$binding', attr.bindCompileHtml);
         scope.$watch(attr.bindCompileHtml, function bindCompileHtml(value) {
-          value = $sanitize(value);
-          element.html(value || '');
+          var sanitized = $sanitize(value);
+          element.html(sanitized || '');
           // compile the content so anchor elements behave properly
           $compile(element.contents())(scope);
         });

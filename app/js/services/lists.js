@@ -41,7 +41,9 @@ angular.module('Reader.services.lists', ['Reader.services.reader'])
       this.title = raw.title ? normalize(raw.title) : '(title unknown)';
   
       this.url = '';
-      if (raw.alternate && raw.alternate[0] && raw.alternate[0].href) {
+      if (raw.canonical && raw.canonical[0] && raw.canonical[0].href) {
+        this.url = raw.canonical[0].href;
+      } else if (raw.alternate && raw.alternate[0] && raw.alternate[0].href) {
         this.url = raw.alternate[0].href;
       }
   
@@ -86,16 +88,16 @@ angular.module('Reader.services.lists', ['Reader.services.reader'])
     
     Item.prototype.editTag = function (cfg) {
       var self = this;
-      this.addCategory(cfg.a);
-      this.removeCategory(cfg.r);
+      this.addCategory(cfg.add);
+      this.removeCategory(cfg.remove);
       
       return reader.editTag({
         i: this.id,
-        a: cfg.a,
-        r: cfg.r
+        a: cfg.add,
+        r: cfg.remove
       }).then(null, function onError() {
-        self.removeCategory(cfg.a);
-        self.addCategory(cfg.r);
+        self.removeCategory(cfg.add);
+        self.addCategory(cfg.remove);
       });
     }
     
@@ -113,27 +115,27 @@ angular.module('Reader.services.lists', ['Reader.services.reader'])
   
     Item.prototype.markAsRead = function () {
       return this.editTag({
-        a: reader.tags.READ,
-        r: reader.tags.KEPT_UNREAD
+        add: reader.tags.READ,
+        remove: reader.tags.KEPT_UNREAD
       });
     };
   
     Item.prototype.keepUnread = function () {
       return this.editTag({
-        a: reader.tags.KEPT_UNREAD,
-        r: reader.tags.READ
+        add: reader.tags.KEPT_UNREAD,
+        remove: reader.tags.READ
       });
     };
   
     Item.prototype.star = function () {
       return this.editTag({
-        a: reader.tags.STARRED
+        add: reader.tags.STARRED
       });
     };
   
     Item.prototype.unStar = function () {
       return this.editTag({
-        r: reader.tags.STARRED
+        remove: reader.tags.STARRED
       });
     };
   

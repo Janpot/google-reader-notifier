@@ -104,11 +104,12 @@ function PopupCtrl($scope, options, reader, List) {
 
   $scope.refresh = function () {
     $scope.error = null;
-    $scope.reader.list.loadItems(20, true).then(function onSuccess() {
-    }, function onError (error) {
-      $scope.error = error;
-      chrome.extension.sendMessage({ method: "updateUnreadCount" });      
-    });
+    $scope.reader.list.loadItems(20, true).then(
+      null, 
+      function onError (error) {
+        $scope.error = error;
+        chrome.extension.sendMessage({ method: "updateUnreadCount" });      
+      });
   };
 
   $scope.showList = function (list) {

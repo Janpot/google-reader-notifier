@@ -1,8 +1,15 @@
 'use strict';
 
-angular.module('Reader.popup', ['Reader.services.lists', 'Reader.services.options', 'Reader.directives', 'Reader.filters', 'ngSanitize']);
+angular.module('Reader.popup', [
+  'Reader.services.reader', 
+  'Reader.services.List', 
+  'Reader.services.options', 
+  'Reader.directives', 
+  'Reader.filters', 
+  'ngSanitize'
+]);
 
-function PopupCtrl($scope, $filter, lists, options) {
+function PopupCtrl($scope, options, reader, List) {
   
   $scope.openUrl = function (url, background) {
     // TODO: move this to a shared lib (for directive)
@@ -22,27 +29,29 @@ function PopupCtrl($scope, $filter, lists, options) {
     item: 'item'
   };
 
+  // TODO: lazy creation of lists
   $scope.readers = {
 
     all: {
       name: 'all',
-      list: lists.getReadingList()
+      list: new List({
+        tag: reader.tags.READING_LIST
+      })
     },
 
     unread: {
       name: 'unread',
-      list: lists.getUnreadList(),
-      filter: {
-        read: false
-      }
+      list: new List({
+        tag: reader.tags.READING_LIST,
+        excludeTag: reader.tags.READ
+      })
     },
 
     starred: {
       name: 'starred',
-      list: lists.getStarredList(),
-      filter: {
-        starred: true
-      }
+      list: new List({
+        tag: reader.tags.STARRED
+      })
     }
 
   };
@@ -94,24 +103,13 @@ function PopupCtrl($scope, $filter, lists, options) {
   };
 
   $scope.refresh = function () {
-    $scope.loadingItems = true;
-    $scope.refreshing = true;
     $scope.error = null;
     $scope.reader.list.loadItems(20, true).then(function onSuccess() {
-      $scope.loadingItems = false;
-      $scope.refreshing = false;
     }, function onError (error) {
       $scope.error = error;
-      $scope.loadingItems = false;
-      $scope.refreshing = false;
       chrome.extension.sendMessage({ method: "updateUnreadCount" });      
     });
   };
-
-  var filter = $filter('filter');
-  $scope.filterItems = function() {
-    return filter($scope.reader.list.items, $scope.reader.filter);
-  }
 
   $scope.showList = function (list) {
     $scope.reader = list;
@@ -166,63 +164,5 @@ function PopupCtrl($scope, $filter, lists, options) {
     $scope.reader = getReaderByName(values.defaultList);
     $scope.refresh();
   });
-  
-  
-  
-  
-  
-  var NUMBER_OF_SCREENITEMS = 7;
-  var START_PRELOAD_OFFSET = 5;
-  var firstItemIndex = 0;
-  
-  $scope.loadingItems = true;
-  
-  var requestMoreItems = function () {
-    if (!$scope.loadingItems && $scope.reader.list.canLoadMore()) {
-      $scope.loadingItems = true;
-      $scope.reader.list.loadItems(20).then(
-        function onSuccess() {
-          $scope.loadingItems = false;
-        }, 
-        function onError(error) {
-          $scope.error = error;
-          $scope.loadingItems = false;
-        }
-      );
-    }
-  };
-  
-  var screenItems = [];
-  
-  $scope.getScreenItems = function () {
-    var list = $scope.reader.list;
-    firstItemIndex = Math.max(firstItemIndex, 0);
-    var lastItemIndex = firstItemIndex + NUMBER_OF_SCREENITEMS;
-    var overflow = lastItemIndex - list.items.length;
-    
-    if (overflow > 0) {
-      lastItemIndex = list.items.length;
-      firstItemIndex = Math.max(firstItemIndex - overflow, 0);      
-    }
-    
-    if (overflow + START_PRELOAD_OFFSET > 0) {
-      requestMoreItems();
-    }
-    
-
-    return list.items.slice(firstItemIndex, lastItemIndex);
-  };
-  
-  $scope.offsetItems = function (delta) {
-    firstItemIndex -= Math.round(delta);    
-  };
-  
-  $scope.noMorePrevious = function () {
-    return firstItemIndex <= 0;
-  };
-  
-  $scope.noMoreNext = function () {
-    return firstItemIndex + NUMBER_OF_SCREENITEMS >= $scope.reader.list.items.length && !$scope.reader.list.canLoadMore();
-  };
 
 };

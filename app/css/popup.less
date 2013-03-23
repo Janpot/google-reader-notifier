@@ -16,9 +16,9 @@
 }
 
 .lines-between(@border) {
-  border-bottom: @border;
-  &:last-child {
-    border-bottom: none;
+  border-top: @border;
+  &:first-child {
+    border-top: none;
   }
 }
 
@@ -129,6 +129,7 @@ body {
   max-height: 600px;
 
   header {
+    border-bottom: 1px solid #DDD;
     padding: 7px 9px 12px 7px;
 
 
@@ -151,7 +152,7 @@ body {
       outline: none;
     }
 
-    .grn-refreshing {
+    .grn-loading {
       padding: 15px 0px;
       text-align: center;
     }

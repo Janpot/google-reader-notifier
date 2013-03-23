@@ -14,7 +14,7 @@
     <script src="js/filters.js"></script>
     <script src="js/directives.js"></script>
     <script src="js/services/reader.js"></script>
-    <script src="js/services/lists.js"></script>
+    <script src="js/services/List.js"></script>
     <script src="js/services/options.js"></script>
     <script src="js/popup.js"></script>
   </head>
@@ -26,8 +26,8 @@
       <header>
         <a class="pull-right" href="https://www.google.com/reader/">Google Reader™</a>
         <div class="btn-toolbar grn-commands">
-          <button class="btn" ng-click="refresh()" ng-disabled="loadingItems" title="{{reader.list.refreshTime | date:'shortTime'}}">
-            <i class="icon-repeat" ng-class="{rotating: loadingItems}"></i>
+          <button class="btn" ng-click="refresh()" ng-disabled="reader.list.loading" title="{{reader.list.refreshTime | date:'shortTime'}}">
+            <i class="icon-repeat" ng-class="{rotating: reader.list.loading}"></i>
           </button>
 
           <div class="btn-group">
@@ -55,18 +55,14 @@
 
       </header>
 
-      <div ng-hide="error" class="grn-container ng-cloak">
-        
-        <div class="grn-navigation" repeating-click="offsetItems(1)" ng-class="{disabled: noMorePrevious()}">
-          <i class="icon-angle-up"></i>
-        </div>
+      <div ng-hide="error" class="grn-container ng-cloak" on-load-more="reader.list.loadItems(10)" can-load-more="reader.list.canLoadMore()" scroll-nice=".scroll-item">
 
-        <ul class="grn-items-list" on-mousewheel="offsetItems(deltaY)">
-          <li class="grn-list-item scroll-item" ng-class="{read: item.isRead()}" ng-repeat="item in getScreenItems()">
+        <ul class="grn-items-list">
+          <li class="grn-list-item scroll-item" ng-class="{read: item.isRead()}" ng-repeat="item in reader.list.filtered()">
             <span class="grn-star" ng-class="{'grn-starred': item.isStarred()}" ng-click="rate(item)"></span>
             <div class="grn-click-target" left-click="showItemView(item)"  middle-click="openInChrome(item)">
               <span class="grn-item-content" title="{{item.title}}">
-                <span class="grn-item-title">{{item.title}}</span>
+                <a class="grn-item-title" href="" middle-click="openInChrome(item)">{{item.title}}</a>
                 {{item.snippet}}
               </span>
               <span class="grn-item-origin" middle-click="openUrl(item.origin.url, true)" i18n-content="popup_OriginText">
@@ -77,9 +73,13 @@
               </ul>
             </div>
           </li>
+          
+          <li class="grn-loading scroll-item" ng-show="reader.list.loading">
+            <img src="img/loading.gif"/>
+          </li>
         </ul>
 
-        <div class="grn-message" ng-show="getScreenItems().length <= 0 && !loadingItems">
+        <div class="grn-message" ng-show="reader.list.filtered().length <= 0 && !reader.list.loading">
           <span i18n-content="popup_EmptyListMsg">No items in this list.</span>
           <span i18n-content="popup_EmptyListToAllItemsMsg" ng-hide="reader == readers.all">
             Show 
@@ -88,14 +88,6 @@
             <!--directive: i18n-substitute $2:</a>-->
             instead?
           </span>
-        </div>
-        
-        <div class="grn-refreshing" ng-show="refreshing">
-          <img src="img/loading.gif"/>
-        </div>
-      
-        <div class="grn-navigation" repeating-click="offsetItems(-1)" ng-class="{disabled: noMoreNext()}">
-          <i class="icon-angle-down"></i>
         </div>
         
       </div>

@@ -1,4 +1,4 @@
-angular.module('Reader.services.lists', ['Reader.services.reader'])
+angular.module('Reader.services.List', ['Reader.services.reader'])
   .factory('Item', function(reader) {
     
     var normalize = function (str) {
@@ -157,7 +157,9 @@ angular.module('Reader.services.lists', ['Reader.services.reader'])
   })
 
 
-  .factory('List', function ($q, reader, Item) {
+  .factory('List', function ($q, $filter, reader, Item) {
+    
+    var filter = $filter('filter');
   
     var List = function (config) {
       this.config = config;
@@ -165,6 +167,17 @@ angular.module('Reader.services.lists', ['Reader.services.reader'])
       this.loading = false;
       this.refreshTime = null;
       this.items = [];
+      
+      this.initFilter();
+    };
+    
+    List.prototype.initFilter = function () {
+      var tag = this.config.tag;
+      var excluded = this.config.excludeTag;     
+      this.itemFilter = function (item) {
+        var isExcluded = excluded && item.hasCategory(excluded);
+        return item.hasCategory(tag) && !isExcluded;
+      };
     };
   
     List.prototype.loadItems = function (n, refresh) {
@@ -207,6 +220,14 @@ angular.module('Reader.services.lists', ['Reader.services.reader'])
   
     List.prototype.getIterator = function (item) {
       return new ListIterator(this, item);
+    };
+    
+    List.prototype.filtered = function () {
+      if (this.itemFilter) {
+        return filter(this.items, this.itemFilter);
+      } else {
+        return this.items;
+      }
     };
   
     var ListIterator = function (list, item) {
@@ -284,26 +305,3 @@ angular.module('Reader.services.lists', ['Reader.services.reader'])
   
     return List;
   })
-
-  .factory('lists', function (List, reader) {
-    return {
-      getReadingList: function (n) {
-        return new List({
-          tag: reader.tags.READING_LIST
-        });
-      },
-  
-      getUnreadList: function (n) {
-        return new List({
-          tag: reader.tags.READING_LIST,
-          excludeTag: reader.tags.READ
-        });
-      },
-  
-      getStarredList: function (n) {
-        return new List({
-          tag: reader.tags.STARRED
-        });
-      }
-    };
-  });
